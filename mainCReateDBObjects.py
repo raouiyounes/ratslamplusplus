@@ -34,7 +34,7 @@ ddd
 
 topic_root='irat_red'
 
-
+qqqqqqqqqqqqqqqqqqq
 
 
 def objDetect(data,file):
