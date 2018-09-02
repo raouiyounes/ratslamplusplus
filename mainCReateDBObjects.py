@@ -28,13 +28,13 @@ import pdb
 import tensorflow as tf
 from ratslam_ros.msg import signalFromCNN
 import time
-import pdb
+import pddddb
 
 ddd
-
+dd
 topic_root='irat_red'
 
-
+xxxxxxxxxxxx
 
 
 def objDetect(data,file):
