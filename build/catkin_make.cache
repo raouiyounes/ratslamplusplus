@@ -1,2 +1,0 @@
-ratslam_python
--DCATKIN_DEVEL_PREFIX=/home/younes/eclipse-workspace/Hamburg_Lim/devel -DCMAKE_INSTALL_PREFIX=/home/younes/eclipse-workspace/Hamburg_Lim/install -G Unix Makefiles

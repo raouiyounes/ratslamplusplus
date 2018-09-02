@@ -1,8 +1,0 @@
-prefix=/home/younes/eclipse-workspace/Hamburg_Lim/install
-
-Name: ratslam_ros
-Description: Description of ratslam_ros
-Version: 0.0.1
-Cflags: -I/home/younes/eclipse-workspace/Hamburg_Lim/install/include
-Libs: -L/home/younes/eclipse-workspace/Hamburg_Lim/install/lib 
-Requires: dynamic_reconfigure message_runtime roscpp rosgraph_msgs rospy std_msgs visualization_msgs
