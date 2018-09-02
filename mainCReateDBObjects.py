@@ -34,7 +34,11 @@ ddd
 dd
 topic_root='irat_red'
 
+<<<<<<< HEAD
 xxxxxxxxxxxx
+=======
+qqqqqqqqqqqqqqqqqqq
+>>>>>>> login
 
 
 def objDetect(data,file):
