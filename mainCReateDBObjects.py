@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
 Created on 2 sept. 2018
 
@@ -28,37 +30,33 @@ import pdb
 import tensorflow as tf
 from ratslam_ros.msg import signalFromCNN
 import time
-import pddddb
+import pdb
+#from src.ratslam_python.src.main_detectObjects import index_of_img
+#from src.ratslam_python.src.main_detectObjects import vObjects
 
-ddd
-dd
 topic_root='irat_red'
 
-<<<<<<< HEAD
-xxxxxxxxxxxx
-=======
-qqqqqqqqqqqqqqqqqqq
->>>>>>> login
+net = object_detection.Net(graph_fp='%s/home/younes/eclipse-workspace/Hamburg_Lim/src/ratslam_python/src/tf_object_detection/faster_rcnn_resnet101_coco_11_06_2017/frozen_inference_graph.pb' %'',
+                           labels_fp='/home/younes/eclipse-workspace/Hamburg_Lim/src/ratslam_python/src/tf_object_detection/data/label.pbtxt',
+                           num_classes=90,
+                           threshold=0.6)
 
 
+vObjects=ob.EM_Object_s()
+index_of_img=0
 def objDetect(data,file):
     #global file
     global index_of_img
     e_max=4
     V1=ob.EM_Object_s()
     V2=ob.EM_Object_s()
-    pub_cnn.publish(0.0)
     br = CvBridge()
-    V_temp=ob.EM_Object_s()
-
     try:
         img=br.imgmsg_to_cv2(data,"bgr8")
     except CvBridgeError as e:
         print e
-      
     current_objects=net.predict(img,display_img=img)
     beta=e_max/2
-    all_images.append(img)
     for object in current_objects:
         position=object["bb_o"]
         x=(position[1]+position[3])/2
@@ -67,16 +65,13 @@ def objDetect(data,file):
         print "label",label 
         vObjects.addObject(x,y,label,index_of_img)
         vObjects.createEdge(x,y,label,index_of_img)
-        V.addObject(x, y, label,index_of_img)
     index_of_img+=1
     cv2.imshow('scene at time t',img)
 
-    cv2.waitKey(1)
+    cv2.waitKey(800)
     cv2.destroyAllWindows()
     
 def listener():
-    file=open("/home/younes/eclipse-workspace/Hamburg_Lim/scoreMatching.txt","a")
-
     sub=rospy.Subscriber('/camera/rgb/image_raw',Image,objDetect,file)
     rospy.spin()
     
@@ -88,11 +83,3 @@ if __name__=='__main__':
 
 
 
-
-
-
-
-
-
-if __name__ == '__main__':
-    pass

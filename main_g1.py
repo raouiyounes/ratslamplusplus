@@ -39,6 +39,7 @@ import time
 import pyrosbag as prb
 import pdb
 from ratslam.match_ponce import Matching
+from ratslam.msg import GraphObjectTemplate
 INTERVAL=3
 
 # vector that computes the scores of X
@@ -109,61 +110,10 @@ def objDetect(data,file):
     V1.objects=V_tot
     
     
-    for i in V.objects:
-        if i not in V1.objects:
-            x=i.cv[0]
-            y=i.cv[1]
-            lv=i.lv
-            V2.addObject(x,y,lv,index_of_img)
     
-    #compute k_nearest neighbors between the new place and the object graph
-    
-    
-    
-    
-    '''for ob1 in V1.objects:
-        for ob2 in V2.objects:
-            dij=math.sqrt((ob1.cv[0]-ob2.cv[0])**2+(ob1.cv[1]-ob2.cv[1])**2)
-            if dij<beta:
-                x=ob2.cv[0]
-                y=ob2.cv[1]
-                lv=ob2.lv
-                V_temp.addObject(x,y,lv,index_of_img)
-    V_tot=nx.Graph()
-    V_tot=nx.compose(V1.objects,V_temp.objects)
-    V1.objects=V_tot
-    '''
-    V1.emax=4
-    match=Matching(V1,V2,all_images)
-    Hr=match.create_Hr()
-    Hl=match.create_Hl()
-    number_of_1=0
-    for i in range(len(Hr)):
-        for j in range(len(Hr[0])):
-            for k in range(len(Hr[0][0])):
-                for l in range(len(Hr[0][0][0])):
-                    if (Hl[i][j][k][l]==1):
-                        print " je suis un 1"
-                        number_of_1+=1
-    #print "index of 1",Hl.index(0)
-    print "number_of_1",number_of_1
-    H=[[[[0]*len(Hr[0][0][0])]*len(Hr[0][0])]*len(Hr[0])]*len(Hr)
-    for i in range(len(Hr)):
-        for j in range(len(Hr[0])):
-            for k in range(len(Hr[0][0])):
-                for l in range(len(Hr[0][0][0])):
-                    H[i][j][k][l]=Hr[i][j][k][l]*Hl[i][j][k][l]
-   
-    match.all_views=all_images
-    scoreX=match.compute_X(H)
-    
-    print " i am near score variable"
-    file.write("eeeeeeeeeeeeeeeeee")
-    scoreXVector.append(scoreX)
-    print "score X",scoreX
-   
-    pub_cnn.publish(1.0)
-    pub_cnn.publish(0.0)
+       
+       
+       
     cv2.imshow('scene at time t',img)
 
     cv2.waitKey(1)
@@ -181,29 +131,29 @@ def listener():
             
     '''
     with prb.BagPlayer("/home/younes/irat_aus_28112011.bag") as example:
-		example.play()
-		while example.is_running:
-			sub=rospy.Subscriber(topic_root+'/camera/rgb/image_raw',Image,objDetect)
-			rospy.spin()
-				
-				
-			time.sleep(INTERVAL)
-			example.pause()
-			print "jjjjjjjjjjjjjjjjjjjj"
-			for _ in range(INTERVAL-1):
-				print "dddddddddddddddddddd"
-				time.sleep(1)
-				example.step()
-			    # to call the callback that detects objects
-				sub=rospy.Subscriber(topic_root+'/camera/rgb/image_raw',Image,objDetect)
-				rospy.spin()
-				#nx.draw(vObjects.objects,with_labels=True)
-				#plt.draw()
-				#plt.show()
-				
-			time.sleep(1)
-			
-			example.resume()
+        example.play()
+        while example.is_running:
+            sub=rospy.Subscriber(topic_root+'/camera/rgb/image_raw',Image,objDetect)
+            rospy.spin()
+                
+                
+            time.sleep(INTERVAL)
+            example.pause()
+            print "jjjjjjjjjjjjjjjjjjjj"
+            for _ in range(INTERVAL-1):
+                print "dddddddddddddddddddd"
+                time.sleep(1)
+                example.step()
+                # to call the callback that detects objects
+                sub=rospy.Subscriber(topic_root+'/camera/rgb/image_raw',Image,objDetect)
+                rospy.spin()
+                #nx.draw(vObjects.objects,with_labels=True)
+                #plt.draw()
+                #plt.show()
+                
+            time.sleep(1)
+            
+            example.resume()
     '''
     
 if __name__=='__main__':
