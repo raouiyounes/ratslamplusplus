@@ -67,12 +67,11 @@ allObjects_V=[]
 all_images=[]
 index_of_img=0
 #file=open("/home/younes/eclipse-workspace/Hamburg_Lim/scoreMatching.txt","a")
-def objDetect(data,file):
+def objDetect(data,pub_ot):
     #global file
     global index_of_img
     e_max=4
     V1=ob.EM_Object_s()
-    V2=ob.EM_Object_s()
     pub_cnn.publish(0.0)
     br = CvBridge()
     V_temp=ob.EM_Object_s()
@@ -108,12 +107,14 @@ def objDetect(data,file):
     V_tot=nx.Graph()
     V_tot=nx.compose(V1.objects,V_temp.objects)
     V1.objects=V_tot
-    
-    
+    ot_output=GraphObjectTemplate()
+    ot_output.header.stamp=rospy.Time.now()
+    ot_output.header.seq+=1
+    ot_output.current_id=V1.get_current_ob()
+    pub_ot.publish(ot_output)
     
        
-       
-       
+
     cv2.imshow('scene at time t',img)
 
     cv2.waitKey(1)
@@ -124,9 +125,11 @@ def objDetect(data,file):
 
 
 def listener():
-    file=open("/home/younes/eclipse-workspace/Hamburg_Lim/scoreMatching.txt","a")
-
-    sub=rospy.Subscriber('/camera/rgb/image_raw',Image,objDetect,file)
+    
+    pub_ot=rospy.Publisher('/LocalObjectGraph/Template',GraphObjectTemplate,queue_size=10)
+    sub=rospy.Subscriber('/camera/rgb/image_raw',Image,objDetect,pub_ot)
+    
+    
     rospy.spin()
             
     '''

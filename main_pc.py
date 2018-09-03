@@ -72,28 +72,28 @@ class  POSE:
 			pcth=pc.best_th
 			print "xesti= "+str(pcx)+"yesti= "+str(pcy)+"thethest ="+str(pcth)
 			pose_pc_robot.write(str(pc.best_x)+" "+str(pc.best_y)+" "+str(pc.best_th)+"\n")
-	def template_callback(self,vt,arg_template):
+	def template_callback(self,ot,pc):
 		pc=arg_template[0]
 		pub_pc=arg_template[1]
 		
 		if self.signGlob==1.0:
 			self.signGlob=0
 		
-			pc.on_view_template(vt.current_id,vt.relative_rad)
+			pc.on_view_template(ot.current_id,vt.relative_rad)
 	def listener(self):
 		'''
 		Main function.
 		'''
 		# Create a subscriber with appropriate topic, custom message and name of
 		# callback function.
-		pc=ratslam.posecell_networkv.PosecellNetwork()
+		pc=ratslam.posecell_networkv.PoseCell2()
 		
 		pub_pc=rospy.Publisher(topic_root+"/PoseCell/TopologicalAction",TopologicalAction,queue_size=0)
 		rospy.Subscriber(topic_root+"/odom",Odometry,self.callback,(pc,pub_pc))
 		sub=rospy.Subscriber('/signalCNN',signalFromCNN,self.signalFromObjNode)
 
 		rospy.Subscriber(topic_root+'/LocalView/Template',ViewTemplate,self.template_callback,(pc,pub_pc))
-		
+		rospy.Subscriber('/LocalObjectGraph/Template',GraphObjectTemplate,self.template_callback)
        
 		# Wait for messages on topic, go to callback function when new messages
 		# arrive.

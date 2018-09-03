@@ -17,10 +17,13 @@ class Vertex:
         self.indexOfView=index_im
 
 class EM_Object_s:
-    
+    #index on the graph
+    current_ob=0
     def __init__(self):
         self.objects=nx.Graph()
         self.emax=150
+        EM_Object_s.current_ob+=1
+        
     def addObject(self,x,y,lv,index_im):
         v=Vertex(x,y,lv,index_im)
         self.objects.add_node(v)
@@ -38,52 +41,6 @@ class EM_Object_s:
         mean=math.sqrt((cvi[0]-cvj[1])**2+(cvj[0]-cvj[1])**2)
         e=np.random.normal(mean,sigma,1000)
         return np.mean(e)
-    """
-    def findRecentObjects(self):
-        for vertexi in self.objects:
-            cv=vertexi.cv
-            lv=vertexi.lv
-    """
     
-
-
-
-
-'''
-object_database={}
-
-class EM_Object_s(ExperienceMap):
-    objects=[]
-    def addObject(self,x,y,lv):
-        v=Vertex(x,y,lv)
-        EM_Objects.objects.append(v)
-    def __init__(self):
-        self.objects=[]
-    
-    def get_objects(self):
-        detect_objects=True
-        while detect_objects==True:
-            object_index=random.randint(1,10)
-            descritor_object=object_database[object_index]
-            self.objects.append(descritor_object)
-    def createEdge(self):
-
-
-
-        
-    def normal(self,cvi,cvj):
-        
-        cov=[0.2,0.2]
-        mean=[cvi.x-cvj.x,cvj.y-cvj.y]
-        x, y = np.random.multivariate_normal(mean, cov, 5000).T
-        return x,y
-        
-    def findRecentObjects(self):
-        for vertexi in self.objects:
-            cv=vertexi.cv
-            lv=vertexi.lv
-'''    
-
-        
-        
-    
+    def get_current_ob(self):
+        return EM_Object_s.current_ob
