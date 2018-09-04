@@ -15,7 +15,7 @@ from matplotlib import pyplot as plot
 from ratslam_ros.msg import TopologicalAction
 from ratslam_ros.msg import ViewTemplate
 from ratslam_ros.msg import signalFromCNN
-
+from ratslam_ros.msg import GraphObjectTemplate
 import ratslam.EM_Objects as ob
 
 # Import custom message data.
@@ -75,10 +75,8 @@ class  POSE:
 	def template_callback(self,ot,pc):
 		pc=arg_template[0]
 		pub_pc=arg_template[1]
-		
 		if self.signGlob==1.0:
 			self.signGlob=0
-		
 			pc.on_view_template(ot.current_id,vt.relative_rad)
 	def listener(self):
 		'''

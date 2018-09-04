@@ -83,12 +83,14 @@ class LocalViewMatch:
         self.convert_view_to_view_template(greyscale)  
         self.prev_vt=self.get_current_vt()
         self.compare()
+        # here the curent visual template is the one that is matched 
         if self.vt_error<=self.VT_MATCH_THRESHOLD:
             self.set_current_vt(int(self.vt_match_id))
             print "VTM[", self.get_current_vt(),"]","\n"
             
             sys.stdout.flush()  
         else:
+            # here we create a new template
             self.vt_relative_rad=0
             self.set_current_vt(self.create_template())
             print "VTN[",self.get_current_vt(),"]","\n"
@@ -201,6 +203,8 @@ class LocalViewMatch:
         
     def create_template(self):
         
+        
+        # the id of each local view cell is the size of the visual template vector
         
         vtt=VisualTemplate()
         vtt.id=len(self.templates)-1

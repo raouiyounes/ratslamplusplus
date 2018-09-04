@@ -418,7 +418,7 @@ class PosecellNetwork:
             return True
         else:
             return False
-    
+    # ompute the distance between the actual experience and the existing ones
     def get_delta_pc(self, x, y, th):
         pc_th_corrected = self.best_th - self.vt_delta_pc_th
         if pc_th_corrected < 0:
@@ -566,19 +566,14 @@ class PosecellNetwork:
         exp.vt_id=self.current_vt
         self.experiences.append(exp)
         self.visual_templates[self.current_vt-1].exps.append(self.current_exp)
-
+    # determine the actions to construct the graph of the map
     def get_action(self):
-        
         experience=PosecellExperience()
         action=PosecellNetwork.PosecellAction.NO_ACTION
-        
         if self.odo_update ==True and self.vt_update==True:
-
             self.odo_update=False
             self.vt_update=False
-            
         else:
-
             return action
         if len(self.visual_templates)==0:
             action=self.PosecellAction.NO_ACTION
@@ -587,13 +582,10 @@ class PosecellNetwork:
             self.create_experience()
             action =self.PosecellAction.CREATE_NODE
         else:
-
             experience=self.experiences[self.current_exp]
-            
             delta_pc=self.get_delta_pc(experience.x_pc,experience.y_pc,experience.th_pc)
             pcvt=self.visual_templates[self.current_vt]
             if len(pcvt.exps)==1:
-
                 self.create_experience()
                 action=self.PosecellAction.CREATE_NODE
             elif delta_pc>self.EXP_DELTA_PC_THRESHOLD or self.current_vt!=self.prev_vt:
@@ -620,8 +612,6 @@ class PosecellNetwork:
                         self.current_exp=matched_exp_id
                         if action==self.PosecellAction.NO_ACTION:
                             action=self.PosecellAction.SET_NODE
-            
-                
                 elif self.current_vt==self.prev_vt:
                     self.create_experience()
                     action=self.PosecellAction.CREATE_NODE
@@ -668,15 +658,14 @@ class PosecellNetwork:
         #pcvt=self.visual_templates[len(self.visual_templates)-1]
         pcvt.pc_x=self.x()
         pcvt.pc_y=self.y()
-        
         pcvt.pc_th=self.th()
-        
         pcvt.decay=self.VT_ACTIVE_DECAY
         self.visual_templates.append(pcvt)
-    
-    
+
+
 class PoseCell2(PosecellNetwork):
-    
+    def __init__(self):
+        PosecellNetwork.__init__(self)
     def create_view_template(self):
         
         
