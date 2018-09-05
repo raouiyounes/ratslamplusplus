@@ -20,13 +20,19 @@ class EM_Object_s:
     #index on the graph
     current_ob=0
     def __init__(self):
+        
+        self.V1=[]
+        self.objetGraphTemplates=[]
         self.objects=nx.Graph()
         self.emax=150
+        self.imageTemplate=[]
         EM_Object_s.current_ob+=1
-        
+        self.graphTemplates=[]
     def addObject(self,x,y,lv,index_im):
         v=Vertex(x,y,lv,index_im)
+        
         self.objects.add_node(v)
+        return v
     def createEdge(self,x,y,lv,index_im):
         vx_i=Vertex(x,y,lv,index_im)
         for ob in list(self.objects.nodes()):
@@ -44,3 +50,22 @@ class EM_Object_s:
     
     def get_current_ob(self):
         return EM_Object_s.current_ob
+
+    #def createGTemplate(self):
+    
+
+    def on_objets(self,current_objects,index_of_img,image):
+        self.imageTemplate.append(image)
+        V1=[]
+        for object in current_objects:
+            position=object["bb_o"]
+            x=(position[1]+position[3])/2
+            y=(position[0]+position[2])/2
+            label=object["class"]
+            V1.append(self.addObject(x, y, label,index_of_img))
+            #self.V.addObject(x, y, label,index_of_img)
+        
+        self.graphTemplates.append(V1)
+        return V1
+        
+        

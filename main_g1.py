@@ -61,12 +61,12 @@ STATIC_MODE = 'static'
 IMAGE_SIZE = 320
 vObjects=ob.EM_Object_s()
 V=ob.EM_Object_s()
-# here I will add the part of the code of object recognition with cnn
 pub_cnn=rospy.Publisher(topic_root+"/signalCNN",signalFromCNN,queue_size=0)
 allObjects_V=[]
 all_images=[]
 index_of_img=0
-#file=open("/home/younes/eclipse-workspace/Hamburg_Lim/scoreMatching.txt","a")
+
+G=ob.EM_Object_s()
 def objDetect(data,pub_ot):
     #global file
     global index_of_img
@@ -84,18 +84,23 @@ def objDetect(data,pub_ot):
     current_objects=net.predict(img,display_img=img)
     beta=e_max/2
     all_images.append(img)
+    
+    V1=G.on_objects(current_objects,img,index_of_img)
+    
+    
+    
+    
     for object in current_objects:
         position=object["bb_o"]
         x=(position[1]+position[3])/2
         y=(position[0]+position[2])/2
         label=object["class"]
-        print "label",label 
-        vObjects.addObject(x,y,label,index_of_img)
-        vObjects.createEdge(x,y,label,index_of_img)
         V1.addObject(x, y, label,index_of_img)
         V.addObject(x, y, label,index_of_img)
     index_of_img+=1
-        
+    
+    #publish the data of the graph g1
+    
     for ob1 in V1.objects:
         for ob2 in V.objects:
             dij=math.sqrt((ob1.cv[0]-ob2.cv[0])**2+(ob1.cv[1]-ob2.cv[1])**2)
@@ -107,22 +112,17 @@ def objDetect(data,pub_ot):
     V_tot=nx.Graph()
     V_tot=nx.compose(V1.objects,V_temp.objects)
     V1.objects=V_tot
+    
+    
+    
     ot_output=GraphObjectTemplate()
     ot_output.header.stamp=rospy.Time.now()
     ot_output.header.seq+=1
     ot_output.current_id=V1.get_current_ob()
     pub_ot.publish(ot_output)
-    
-       
-
     cv2.imshow('scene at time t',img)
-
     cv2.waitKey(1)
     cv2.destroyAllWindows()
-    
-
-
-
 
 def listener():
     
@@ -131,33 +131,6 @@ def listener():
     
     
     rospy.spin()
-            
-    '''
-    with prb.BagPlayer("/home/younes/irat_aus_28112011.bag") as example:
-        example.play()
-        while example.is_running:
-            sub=rospy.Subscriber(topic_root+'/camera/rgb/image_raw',Image,objDetect)
-            rospy.spin()
-                
-                
-            time.sleep(INTERVAL)
-            example.pause()
-            print "jjjjjjjjjjjjjjjjjjjj"
-            for _ in range(INTERVAL-1):
-                print "dddddddddddddddddddd"
-                time.sleep(1)
-                example.step()
-                # to call the callback that detects objects
-                sub=rospy.Subscriber(topic_root+'/camera/rgb/image_raw',Image,objDetect)
-                rospy.spin()
-                #nx.draw(vObjects.objects,with_labels=True)
-                #plt.draw()
-                #plt.show()
-                
-            time.sleep(1)
-            
-            example.resume()
-    '''
     
 if __name__=='__main__':
     rospy.init_node('RatSLAMObjects',anonymous=True)
