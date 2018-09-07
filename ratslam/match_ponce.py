@@ -22,9 +22,9 @@ class Matching:
 		self.surf=cv2.xfeatures2d.SURF_create(400)
 		self.matchX1X2=0
 		
-	def normal(self,cv_i,cv_j):
+	def normalfx(self,cv_i,cv_j):
 		 mean=[cv_i[0]-cv_j[0],cv_i[1]-cv_j[1]]
-		 return np.random.multivariate_normal(mean,[[1, 0], [0, 100]],1)
+		 return np.random.multivariate_normal(mean,[[1, 0], [0, 100]],2)
 	
 	
 	
@@ -46,8 +46,8 @@ class Matching:
 		
 	
 	def create_Hr(self):
-		Vl_1=list(self.V1.objects.nodes)
-		Vl_2=list(self.V2.objects.nodes)
+		Vl_1=list(self.V1.nodes)
+		Vl_2=list(self.V2.nodes)
 		emax=2
 		for i1 in Vl_1:
 			Hj3=[]
@@ -58,11 +58,12 @@ class Matching:
 					for j2 in Vl_2:
 						cv11=[i1.cv[0],i1.cv[1]]
 						cv12=[j1.cv[0],j1.cv[1]]
-						e_i1_j1=self.normal(cv11,cv12)
+						e_i1_j1=self.normalfx(cv11,cv12)
 						e_i1_j1=e_i1_j1[0]
+						
 						cv21=[i2.cv[0],i2.cv[1]]
  						cv22=[j2.cv[0],j2.cv[1]]
- 						e_i2_j2=self.normal(cv21,cv22)
+ 						e_i2_j2=self.normalfx(cv21,cv22)
  						e_i2_j2=e_i2_j2[0]
  						Hj1.append(emax-math.sqrt((e_i1_j1[0]-e_i2_j2[0])**2+(e_i1_j1[1]-e_i2_j2[1])**2))
  					Hj2.append(Hj1)
@@ -100,8 +101,8 @@ class Matching:
  		return self.Hr
  	'''
 	def create_Hl(self):
-		Vl_1=list(self.V1.objects.nodes)
-		Vl_2=list(self.V2.objects.nodes)
+		Vl_1=list(self.V1.nodes)
+		Vl_2=list(self.V2.nodes)
 		for i1 in Vl_1:
 			Hj3=[]
 			for i2 in Vl_2:
@@ -111,7 +112,6 @@ class Matching:
 					for j2 in Vl_2:
 						if (i1.lv==i2.lv  and  j1.lv==j2.lv):
 							Hj1.append(1)
-							print "je suis ds 111111111"
 						else:	
 							Hj1.append(0)
 					Hj2.append(Hj1)
@@ -141,8 +141,8 @@ class Matching:
 			return 0
 		
 	def compute_X(self,H):
-		Vl_1=list(self.V1.objects.nodes)
-		Vl_2=list(self.V2.objects.nodes)
+		Vl_1=list(self.V1.nodes)
+		Vl_2=list(self.V2.nodes)
 		scoreX=0
 		Hl=self.Hl
 		X1=[[0]*len(Hl[0])]*len(Hl)
@@ -160,8 +160,6 @@ class Matching:
 						x1_ind=X1[i1][i2]
 						x2_ind=X2[j1][j2]
 						h_ind=H[i1][i2][j1][j2]
-						#print "h_ind",h_ind
-						#print "x1_ind,x2_ind",x1_ind,x2_ind
 						def computeScoreX(h_ind,x1_ind,x2_ind):
 							return  h_ind*x1_ind*x2_ind 
 						scoreX+=computeScoreX(h_ind,x1_ind,x2_ind)

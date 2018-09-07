@@ -23,7 +23,7 @@ class EM_Object_s(Matching):
     #index on the graph
     current_ob=0
     def __init__(self):
-        
+        self.minMatchingScore=0
         self.V1=[]
         self.objetGraphTemplates=[]
         self.objects=nx.Graph()
@@ -54,10 +54,10 @@ class EM_Object_s(Matching):
  
     #def createGTemplate(self):
     
-
-    def on_objects(self,current_objects,index_of_img,image):
+    def reset(self):
+        self.objects.clear()
+    def on_objects(self,current_objects,image,index_of_img):
         self.imageTemplate.append(image)
-        V1=nx.Graph()
         for object in current_objects:
             position=object["bb_o"]
             x=(position[1]+position[3])/2
@@ -67,14 +67,14 @@ class EM_Object_s(Matching):
             #self.V.addObject(x, y, label,index_of_img)
         
         self.graphTemplates.append(self.objects)
-        #return self.objects
+        return self.objects
     
     # ompare between the actual grapg and all the graphs of objects
     def compare(self,V1):
         
         score=[]
         for oneObjectTemplate in self.graphTemplates:
-            Matching.__init__(self, V1, oneObjectTemplate, image)        
+            Matching.__init__(self, V1, oneObjectTemplate, self.imageTemplate)        
             Hl=self.create_Hl()
             Hr=self.create_Hr()
             H=[[[[0]*len(Hr[0][0][0])]*len(Hr[0][0])]*len(Hr[0])]*len(Hr)
@@ -87,6 +87,7 @@ class EM_Object_s(Matching):
             score.append(self.compute_X(H))
         
         minScore=min(score)
+        print  "minScore",minScore 
         if minScore<self.minMatchingScore:
             self.current_ob=score.index(minScore)
         else:

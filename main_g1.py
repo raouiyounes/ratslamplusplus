@@ -85,37 +85,14 @@ def objDetect(data,pub_ot):
     beta=e_max/2
     all_images.append(img)
     
-    G.on_objects(current_objects,img,index_of_img)
-    
-    G.compare()
-    """
-    for object in current_objects:
-        position=object["bb_o"]
-        x=(position[1]+position[3])/2
-        y=(position[0]+position[2])/2
-        label=object["class"]
-        V1.addObject(x, y, label,index_of_img)
-        V.addObject(x, y, label,index_of_img)
+    O=G.on_objects(current_objects,img,index_of_img)
     index_of_img+=1
-    
-    #publish the data of the graph g1
-    
-    for ob1 in V1.objects:
-        for ob2 in V.objects:
-            dij=math.sqrt((ob1.cv[0]-ob2.cv[0])**2+(ob1.cv[1]-ob2.cv[1])**2)
-            if dij<beta:
-                x=ob2.cv[0]
-                y=ob2.cv[1]
-                lv=ob2.lv
-                V_temp.addObject(x,y,lv,index_of_img)
-    V_tot=nx.Graph()
-    V_tot=nx.compose(V1.objects,V_temp.objects)
-    V1.objects=V_tot
-    """
+    G.compare(O)
     ot_output=GraphObjectTemplate()
     ot_output.header.stamp=rospy.Time.now()
     ot_output.header.seq+=1
     ot_output.current_id=G.get_current_ob()
+    G.reset()
     print "ot_output.current_id",ot_output.current_id
     pub_ot.publish(ot_output)
     cv2.imshow('scene at time t',img)
