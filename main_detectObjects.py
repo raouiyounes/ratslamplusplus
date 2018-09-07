@@ -116,23 +116,6 @@ def objDetect(data,file):
             lv=i.lv
             V2.addObject(x,y,lv,index_of_img)
     
-    #compute k_nearest neighbors between the new place and the object graph
-    
-    
-    
-    
-    '''for ob1 in V1.objects:
-        for ob2 in V2.objects:
-            dij=math.sqrt((ob1.cv[0]-ob2.cv[0])**2+(ob1.cv[1]-ob2.cv[1])**2)
-            if dij<beta:
-                x=ob2.cv[0]
-                y=ob2.cv[1]
-                lv=ob2.lv
-                V_temp.addObject(x,y,lv,index_of_img)
-    V_tot=nx.Graph()
-    V_tot=nx.compose(V1.objects,V_temp.objects)
-    V1.objects=V_tot
-    '''
     V1.emax=4
     match=Matching(V1,V2,all_images)
     Hr=match.create_Hr()
@@ -156,16 +139,10 @@ def objDetect(data,file):
    
     match.all_views=all_images
     scoreX=match.compute_X(H)
-    
-    print " i am near score variable"
-    file.write("eeeeeeeeeeeeeeeeee")
     scoreXVector.append(scoreX)
     print "score X",scoreX
-   
     pub_cnn.publish(1.0)
-    pub_cnn.publish(0.0)
     cv2.imshow('scene at time t',img)
-
     cv2.waitKey(1)
     cv2.destroyAllWindows()
     
@@ -174,38 +151,9 @@ def objDetect(data,file):
 
 
 def listener():
-    file=open("/home/younes/eclipse-workspace/Hamburg_Lim/scoreMatching.txt","a")
-
+  
     sub=rospy.Subscriber('/camera/rgb/image_raw',Image,objDetect,file)
     rospy.spin()
-            
-    '''
-    with prb.BagPlayer("/home/younes/irat_aus_28112011.bag") as example:
-		example.play()
-		while example.is_running:
-			sub=rospy.Subscriber(topic_root+'/camera/rgb/image_raw',Image,objDetect)
-			rospy.spin()
-				
-				
-			time.sleep(INTERVAL)
-			example.pause()
-			print "jjjjjjjjjjjjjjjjjjjj"
-			for _ in range(INTERVAL-1):
-				print "dddddddddddddddddddd"
-				time.sleep(1)
-				example.step()
-			    # to call the callback that detects objects
-				sub=rospy.Subscriber(topic_root+'/camera/rgb/image_raw',Image,objDetect)
-				rospy.spin()
-				#nx.draw(vObjects.objects,with_labels=True)
-				#plt.draw()
-				#plt.show()
-				
-			time.sleep(1)
-			
-			example.resume()
-    '''
-    
 if __name__=='__main__':
     rospy.init_node('RatSLAMObjects',anonymous=True)
     listener()

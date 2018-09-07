@@ -39,7 +39,7 @@ import time
 import pyrosbag as prb
 import pdb
 from ratslam.match_ponce import Matching
-from ratslam.msg import GraphObjectTemplate
+from ratslam_ros.msg import GraphObjectTemplate
 INTERVAL=3
 
 # vector that computes the scores of X
@@ -85,11 +85,10 @@ def objDetect(data,pub_ot):
     beta=e_max/2
     all_images.append(img)
     
-    V1=G.on_objects(current_objects,img,index_of_img)
+    G.on_objects(current_objects,img,index_of_img)
     
-    
-    
-    
+    G.compare()
+    """
     for object in current_objects:
         position=object["bb_o"]
         x=(position[1]+position[3])/2
@@ -112,13 +111,12 @@ def objDetect(data,pub_ot):
     V_tot=nx.Graph()
     V_tot=nx.compose(V1.objects,V_temp.objects)
     V1.objects=V_tot
-    
-    
-    
+    """
     ot_output=GraphObjectTemplate()
     ot_output.header.stamp=rospy.Time.now()
     ot_output.header.seq+=1
-    ot_output.current_id=V1.get_current_ob()
+    ot_output.current_id=G.get_current_ob()
+    print "ot_output.current_id",ot_output.current_id
     pub_ot.publish(ot_output)
     cv2.imshow('scene at time t',img)
     cv2.waitKey(1)

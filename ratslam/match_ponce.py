@@ -15,8 +15,8 @@ class Matching:
 		self.V1=V1
 		self.V2=V2
 		self.all_views=all_images
-		Vl_1=list(self.V1.objects.nodes)
-		Vl_2=list(self.V2.objects.nodes)
+		Vl_1=list(self.V1.nodes)
+		Vl_2=list(self.V2.nodes)
 		self.Hl=[]
 		self.Hr=[]
 		self.surf=cv2.xfeatures2d.SURF_create(400)

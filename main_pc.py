@@ -73,11 +73,8 @@ class  POSE:
 			print "xesti= "+str(pcx)+"yesti= "+str(pcy)+"thethest ="+str(pcth)
 			pose_pc_robot.write(str(pc.best_x)+" "+str(pc.best_y)+" "+str(pc.best_th)+"\n")
 	def template_callback(self,ot,pc):
-		pc=arg_template[0]
-		pub_pc=arg_template[1]
-		if self.signGlob==1.0:
-			self.signGlob=0
-			pc.on_view_template(ot.current_id,vt.relative_rad)
+		
+		pc.on_view_template(ot.current_id,0.0)
 	def listener(self):
 		'''
 		Main function.

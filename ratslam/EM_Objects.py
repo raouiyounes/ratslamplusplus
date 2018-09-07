@@ -3,6 +3,9 @@ import networkx as nx
 from OpenGL.GL.feedback import Vertex
 import numpy as np
 import math
+from match_ponce import Matching
+from docutils.nodes import image
+
 '''
 Created on 23 fevr. 2018
 
@@ -16,7 +19,7 @@ class Vertex:
         self.lv=lv
         self.indexOfView=index_im
 
-class EM_Object_s:
+class EM_Object_s(Matching):
     #index on the graph
     current_ob=0
     def __init__(self):
@@ -28,9 +31,9 @@ class EM_Object_s:
         self.imageTemplate=[]
         EM_Object_s.current_ob+=1
         self.graphTemplates=[]
+        self.current_ob=0
     def addObject(self,x,y,lv,index_im):
         v=Vertex(x,y,lv,index_im)
-        
         self.objects.add_node(v)
         return v
     def createEdge(self,x,y,lv,index_im):
@@ -48,24 +51,47 @@ class EM_Object_s:
         e=np.random.normal(mean,sigma,1000)
         return np.mean(e)
     
-    def get_current_ob(self):
-        return EM_Object_s.current_ob
-
+ 
     #def createGTemplate(self):
     
 
-    def on_objets(self,current_objects,index_of_img,image):
+    def on_objects(self,current_objects,index_of_img,image):
         self.imageTemplate.append(image)
-        V1=[]
+        V1=nx.Graph()
         for object in current_objects:
             position=object["bb_o"]
             x=(position[1]+position[3])/2
             y=(position[0]+position[2])/2
             label=object["class"]
-            V1.append(self.addObject(x, y, label,index_of_img))
+            self.addObject(x, y, label,index_of_img)
             #self.V.addObject(x, y, label,index_of_img)
         
-        self.graphTemplates.append(V1)
-        return V1
+        self.graphTemplates.append(self.objects)
+        #return self.objects
+    
+    # ompare between the actual grapg and all the graphs of objects
+    def compare(self,V1):
         
+        score=[]
+        for oneObjectTemplate in self.graphTemplates:
+            Matching.__init__(self, V1, oneObjectTemplate, image)        
+            Hl=self.create_Hl()
+            Hr=self.create_Hr()
+            H=[[[[0]*len(Hr[0][0][0])]*len(Hr[0][0])]*len(Hr[0])]*len(Hr)
+            for i in range(len(Hr)):
+                for j in range(len(Hr[0])):
+                    for k in range(len(Hr[0][0])):
+                        for l in range(len(Hr[0][0][0])):
+                            H[i][j][k][l]=Hr[i][j][k][l]*Hl[i][j][k][l]
+            
+            score.append(self.compute_X(H))
+        
+        minScore=min(score)
+        if minScore<self.minMatchingScore:
+            self.current_ob=score.index(minScore)
+        else:
+            self.current_ob+=1
+                
+    def get_current_ob(self):
+        return self.current_ob
         
