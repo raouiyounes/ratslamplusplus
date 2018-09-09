@@ -620,6 +620,7 @@ class PosecellNetwork:
     # when a visual scene is viewed the hebiian learning is applied to update beta
     
     def on_view_template(self,vt,vt_rad):
+        print "jkkkkkkkkkk"
         pcvt=PosecellVisualTemplate()
         if vt>=len(self.visual_templates):
             self.create_view_template()
@@ -662,14 +663,11 @@ class PosecellNetwork:
         pcvt.decay=self.VT_ACTIVE_DECAY
         self.visual_templates.append(pcvt)
 
-
+"""
 class PoseCell2(PosecellNetwork):
     def __init__(self):
         PosecellNetwork.__init__(self)
     def create_view_template(self):
-        
-        
-        
-    
+""" 
     
     

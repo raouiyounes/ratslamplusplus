@@ -47,7 +47,7 @@ class  POSE:
 		'''
 		Callback function for the subscriber.
 		'''
-		if self.signGlob==1.0:
+		if 1.0==1.0:
 			#self.signGlob=0
 			global prev_time
 			if (prev_time>0):
@@ -72,8 +72,10 @@ class  POSE:
 			pcth=pc.best_th
 			print "xesti= "+str(pcx)+"yesti= "+str(pcy)+"thethest ="+str(pcth)
 			pose_pc_robot.write(str(pc.best_x)+" "+str(pc.best_y)+" "+str(pc.best_th)+"\n")
-	def template_callback(self,ot,pc):
-		
+	def template_callback(self,ot,arg_template):
+		print "jjjjjjjjjj"
+		pc=arg_template[0]
+		pub_pc=arg_template[1]
 		pc.on_view_template(ot.current_id,0.0)
 	def listener(self):
 		'''
@@ -81,14 +83,14 @@ class  POSE:
 		'''
 		# Create a subscriber with appropriate topic, custom message and name of
 		# callback function.
-		pc=ratslam.posecell_networkv.PoseCell2()
+		pc=ratslam.posecell_networkv.PosecellNetwork()
 		
 		pub_pc=rospy.Publisher(topic_root+"/PoseCell/TopologicalAction",TopologicalAction,queue_size=0)
 		rospy.Subscriber(topic_root+"/odom",Odometry,self.callback,(pc,pub_pc))
 		sub=rospy.Subscriber('/signalCNN',signalFromCNN,self.signalFromObjNode)
 
-		rospy.Subscriber(topic_root+'/LocalView/Template',ViewTemplate,self.template_callback,(pc,pub_pc))
-		rospy.Subscriber('/LocalObjectGraph/Template',GraphObjectTemplate,self.template_callback)
+		#rospy.Subscriber(topic_root+'/LocalView/Template',ViewTemplate,self.template_callback,(pc,pub_pc))
+		rospy.Subscriber('/LocalObjectGraph/Template',GraphObjectTemplate,self.template_callback,(pc,pub_pc))
        
 		# Wait for messages on topic, go to callback function when new messages
 		# arrive.
