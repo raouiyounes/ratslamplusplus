@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 from tf_object_detection.models import object_detection 
 from tf_object_detection.config import config
 import tensorflow
-topic_root='irat_red'
+topic_root=''
 import pdb
 import tensorflow as tf
 from ratslam_ros.msg import signalFromCNN
@@ -56,7 +56,7 @@ class Objects:
     def image_callback(self,image,args):
         pub_vt=args[0]
         x=args[1]
-        if self.signGlob==1.0:
+        if self.signGlob==self.signGlob:
             self.signGlob=0
             imdatatest=np.zeros(image.width*image.height*3)
             imdata=ros_numpy.numpify(image)

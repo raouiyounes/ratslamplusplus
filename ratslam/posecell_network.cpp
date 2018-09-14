@@ -1032,7 +1032,7 @@ void PosecellNetwork::on_view_template(unsigned int vt, double vt_rad)
   {
     // must be a new template
     create_view_template();
-//assert(vt == visual_templates.size()-1);
+assert(vt == visual_templates.size()-1);
   }
   else
   {

@@ -274,7 +274,7 @@ public:
   double * PC_TH_SUM_COS_LOOKUP;
 
   double PC_C_SIZE_TH;
-
+public:
   std::vector<PosecellVisualTemplate> visual_templates;
   std::vector<PosecellExperience> experiences;
 

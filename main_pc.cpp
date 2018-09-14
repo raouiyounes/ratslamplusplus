@@ -39,6 +39,8 @@ using namespace std;
 #include<ratslam_ros/signalFromCNN.h>
 #include <nav_msgs/Odometry.h>
 #include <ratslam_ros/ViewTemplate.h>
+#include <ratslam_ros/GraphObjectTemplate.h>
+
 #include <fstream>
 
 #if HAVE_IRRLICHT
@@ -114,7 +116,19 @@ pose_of_my_robot<<pc->best_x<<" "<<pc->best_y<<" "<<pc->best_th<<endl;
   }
 }
 
-static void template_callback(ratslam_ros::ViewTemplateConstPtr vt, ratslam::PosecellNetwork *pc, ros::Publisher * pub_pc	)
+static void template_callback(ratslam_ros::GraphObjectTemplateConstPtr ot, ratslam::PosecellNetwork *pc, ros::Publisher * pub_pc	)
+{
+  ROS_DEBUG_STREAM("PC:ot_callback{" << ros::Time::now() << "} seq=" << ot->header.seq << " id=" << ot->current_id << " rad=" << ot->relative_rad);
+
+	if (1==1){
+		signGlob=0;
+  std::cout<<"current id: "<<ot->current_id<<" relative rad : "<<0.0<<"\n";
+  pc->on_view_template(ot->current_id, ot->relative_rad);
+	}
+}
+
+
+static void template_callbackv(ratslam_ros::ViewTemplateConstPtr vt, ratslam::PosecellNetwork *pc, ros::Publisher * pub_pc	)
 {
   //ROS_DEBUG_STREAM("PC:vt_callback{" << ros::Time::now() << "} seq=" << vt->header.seq << " id=" << vt->current_id << " rad=" << vt->relative_rad);
 
@@ -124,6 +138,7 @@ static void template_callback(ratslam_ros::ViewTemplateConstPtr vt, ratslam::Pos
 
 
   std::cout<<"current id: "<<vt->current_id<<" relative rad : "<<vt->relative_rad<<"\n";
+  if (pc->visual_templates.size()==vt->current_id)
   pc->on_view_template(vt->current_id, vt->relative_rad);
 	}
 /*
@@ -136,6 +151,8 @@ static void template_callback(ratslam_ros::ViewTemplateConstPtr vt, ratslam::Pos
 #endif
 */
 }
+
+
 };
 
 float Poses::signGlob;
@@ -183,8 +200,11 @@ int main(int argc, char * argv[])
   ros::Subscriber sub_odometry = node.subscribe<nav_msgs::Odometry>(topic_root + "/odom", 0, boost::bind(ps->odo_callback, _1, pc, &pub_pc), ros::VoidConstPtr(),
                                                                     ros::TransportHints().tcpNoDelay());
 
-  ros::Subscriber sub_template = node.subscribe<ratslam_ros::ViewTemplate>(topic_root+"/LocalView/Template", 0, boost::bind(ps->template_callback, _1, pc, &pub_pc),
+  ros::Subscriber sub_template = node.subscribe<ratslam_ros::ViewTemplate>(topic_root+"/LocalView/Template", 0, boost::bind(ps->template_callbackv, _1, pc, &pub_pc),
                                                                        ros::VoidConstPtr(), ros::TransportHints().tcpNoDelay());
+
+
+  ros::Subscriber sub_template_on=node.subscribe<ratslam_ros::GraphObjectTemplate>(topic_root+"/LocalObjectGraph/Template", 0, boost::bind(ps->template_callback, _1, pc, &pub_pc),ros::VoidConstPtr(), ros::TransportHints().tcpNoDelay());
 
   /*
   #ifdef HAVE_IRRLICHT
