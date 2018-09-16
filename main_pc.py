@@ -89,8 +89,8 @@ class  POSE:
 		rospy.Subscriber(topic_root+"/odom",Odometry,self.callback,(pc,pub_pc))
 		sub=rospy.Subscriber('/signalCNN',signalFromCNN,self.signalFromObjNode)
 
-		#rospy.Subscriber(topic_root+'/LocalView/Template',ViewTemplate,self.template_callback,(pc,pub_pc))
-		rospy.Subscriber('/LocalObjectGraph/Template',GraphObjectTemplate,self.template_callback,(pc,pub_pc))
+		rospy.Subscriber(topic_root+'/LocalView/Template',ViewTemplate,self.template_callback,(pc,pub_pc))
+		#rospy.Subscriber('/LocalObjectGraph/Template',GraphObjectTemplate,self.template_callback,(pc,pub_pc))
        
 		# Wait for messages on topic, go to callback function when new messages
 		# arrive.

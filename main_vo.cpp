@@ -43,7 +43,7 @@ using namespace std;
 #include <opencv2/highgui/highgui.hpp>
 
 #include <image_transport/image_transport.h>
-
+#include <iostream>
 
 
 #include <image_transport/image_transport.h>
@@ -61,7 +61,7 @@ using namespace ratslam;
 void image_callback(sensor_msgs::ImageConstPtr image)
 {
   ROS_DEBUG_STREAM("VO:image_callback{" << ros::Time::now() << "} seq=" << image->header.seq);
-
+std::cout<<"i am in the v o";
   static nav_msgs::Odometry odom_output;
 
   vo->on_image(&image->data[0], (image->encoding == "bgr8" ? false : true), image->width, image->height, &odom_output.twist.twist.linear.x, &odom_output.twist.twist.angular.z);
@@ -101,10 +101,10 @@ int main(int argc, char * argv[])
   }
   ros::NodeHandle node;
 
-  pub_vo = node.advertise<nav_msgs::Odometry>(topic_root + "/odom", 0);
+  pub_vo = node.advertise<nav_msgs::Odometry>( "/odom", 0);
 
   image_transport::ImageTransport it(node);
-  image_transport::Subscriber sub = it.subscribe(topic_root + "/camera/image", 1, image_callback);
+  image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_raw", 1, image_callback);
 
   ros::spin();
 
