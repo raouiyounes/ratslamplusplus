@@ -124,8 +124,6 @@ void odo_callback(nav_msgs::OdometryConstPtr odo, ratslam::ExperienceMap *em)
       pub_goal_path.publish(path);
 
       path.header.seq++;
-      myfile<<em->get_experience(em->get_current_id())->x_m<<" "<<em->get_experience(em->get_current_id())->y_m<<"\n";
-
     }
 
     myfile<<em->get_experience(em->get_current_id())->x_m<<" "<<em->get_experience(em->get_current_id())->y_m<<"\n";

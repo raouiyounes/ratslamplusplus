@@ -242,17 +242,14 @@ bool PosecellNetwork::inject(int act_x, int act_y, int act_z, double energy)
 
   if (act_x < PC_DIM_XY && act_x >= 0 && act_y < PC_DIM_XY && act_y >= 0 && act_z < PC_DIM_TH && act_z >= 0)
     posecells[act_z][act_y][act_x] += energy;
-
   return true;
 }
 
 bool PosecellNetwork::excite(void)
 {
   int i, j, k;
-
   // set all of pca_new to 0
   memset(pca_new_memory, 0, posecells_memory_size);
-
   // loop in all three dimensions
   for (i = 0; i < PC_DIM_XY; i++)
   {

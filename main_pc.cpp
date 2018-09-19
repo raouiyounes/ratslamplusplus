@@ -128,6 +128,10 @@ static void template_callback(ratslam_ros::GraphObjectTemplateConstPtr ot, ratsl
 }
 
 
+
+
+
+
 static void template_callbackv(ratslam_ros::ViewTemplateConstPtr vt, ratslam::PosecellNetwork *pc, ros::Publisher * pub_pc	)
 {
   //ROS_DEBUG_STREAM("PC:vt_callback{" << ros::Time::now() << "} seq=" << vt->header.seq << " id=" << vt->current_id << " rad=" << vt->relative_rad);
