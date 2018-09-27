@@ -123,6 +123,8 @@ static void template_callback(ratslam_ros::GraphObjectTemplateConstPtr ot, ratsl
 	if (1==1){
 		signGlob=0;
   std::cout<<"current id: "<<ot->current_id<<" relative rad : "<<0.0<<"\n";
+  if (pc->visual_templates.size()==ot->current_id)
+
   pc->on_view_template(ot->current_id, ot->relative_rad);
 	}
 }

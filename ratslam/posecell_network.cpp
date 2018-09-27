@@ -242,14 +242,17 @@ bool PosecellNetwork::inject(int act_x, int act_y, int act_z, double energy)
 
   if (act_x < PC_DIM_XY && act_x >= 0 && act_y < PC_DIM_XY && act_y >= 0 && act_z < PC_DIM_TH && act_z >= 0)
     posecells[act_z][act_y][act_x] += energy;
+
   return true;
 }
 
 bool PosecellNetwork::excite(void)
 {
   int i, j, k;
+
   // set all of pca_new to 0
   memset(pca_new_memory, 0, posecells_memory_size);
+
   // loop in all three dimensions
   for (i = 0; i < PC_DIM_XY; i++)
   {
@@ -883,18 +886,15 @@ double PosecellNetwork::norm2d(double var, int x, int y, int z, int dim_centre)
 
 void PosecellNetwork::create_experience()
 {
-  //PosecellVisualTemplate * pcvt = &visual_templates[current_vt];
-  
-  std::cout<<"taille de experience :"<<experiences.size()<<"\n";
+  PosecellVisualTemplate * pcvt = &visual_templates[current_vt];
   experiences.resize(experiences.size() + 1);
-  /*current_exp = experiences.size() - 1;
+  current_exp = experiences.size() - 1;
   PosecellExperience * exp = &experiences[current_exp];
   exp->x_pc = x();
   exp->y_pc = y();
   exp->th_pc = th();
   exp->vt_id = current_vt;
   pcvt->exps.push_back(current_exp);
-*/
 }
 
 
@@ -916,8 +916,6 @@ PosecellNetwork::PosecellAction PosecellNetwork::get_action()
   if (visual_templates.size() == 0)
   {
     action = NO_ACTION;
-    std::cout<<"no action";
-
     return action;
   }
 
@@ -1029,13 +1027,11 @@ void PosecellNetwork::on_view_template(unsigned int vt, double vt_rad)
   {
     // must be a new template
     create_view_template();
-assert(vt == visual_templates.size()-1);
+    assert(vt == visual_templates.size()-1);
   }
   else
   {
-
-	  std::cout<<"je suis dans else";
-	  // the template must exist
+    // the template must exist
     pcvt = &visual_templates[vt];
 
     // this prevents energy injected in recently created vt's
@@ -1053,7 +1049,7 @@ assert(vt == visual_templates.size()-1);
       {
 		vt_delta_pc_th = vt_rad / (2.0*M_PI) * PC_DIM_TH;
 		double pc_th_corrected = pcvt->pc_th + vt_rad / (2.0*M_PI) * PC_DIM_TH;
-		if (pc_th_corrected < 0)
+		if (pc_th_corrected < 0) 
 			pc_th_corrected = PC_DIM_TH + pc_th_corrected;
 		if (pc_th_corrected >= PC_DIM_TH)
 			pc_th_corrected = pc_th_corrected - PC_DIM_TH;
@@ -1070,10 +1066,10 @@ assert(vt == visual_templates.size()-1);
   }
 
   prev_vt = current_vt;
-
   current_vt = vt;
 
 vt_update = true;
 }
 
 } // namespace ratslam
+
