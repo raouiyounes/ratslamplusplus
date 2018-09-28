@@ -51,25 +51,38 @@ using namespace std;
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <ratslam_ros/myViOdom.h>
 
 
+using namespace std;
 ratslam::VisualOdometry *vo = NULL;
-ros::Publisher pub_vo;
 
+ros::Publisher myPub_vo;
 using namespace ratslam;
+ratslam_ros::myViOdom odom_output;
 
+//odom_output.mySeq=0;
 void image_callback(sensor_msgs::ImageConstPtr image)
 {
+	
+	cout<<"bbbbbbbbbbbbbb";
   ROS_DEBUG_STREAM("VO:image_callback{" << ros::Time::now() << "} seq=" << image->header.seq);
 std::cout<<"i am in the v o";
-  static nav_msgs::Odometry odom_output;
 
-  vo->on_image(&image->data[0], (image->encoding == "bgr8" ? false : true), image->width, image->height, &odom_output.twist.twist.linear.x, &odom_output.twist.twist.angular.z);
+/*
+  static ratslam_ros::myViOdom odom_output;
+cout<<"i am an image"<<image->height<<endl;
 
-  odom_output.header.stamp = image->header.stamp;
-  odom_output.header.seq++;
 
-  pub_vo.publish(odom_output);
+  vo->on_image(&image->data[0], (image->encoding == "bgr8" ? false : true), image->width, image->height, &odom_output.linVel, &odom_output.angVel);
+cout<<"i am an image"<<image->height<<endl;
+
+
+  //odom_output.myTimeSt = image->header.stamp;
+  odom_output.mySeq++;
+
+  myPub_vo.publish(odom_output);
+  */
 }
 
 
@@ -101,10 +114,11 @@ int main(int argc, char * argv[])
   }
   ros::NodeHandle node;
 
-  pub_vo = node.advertise<nav_msgs::Odometry>( "/odom", 0);
+  myPub_vo  = node.advertise<ratslam_ros::myViOdom>("/visualOdomVel", 0);
+
 
   image_transport::ImageTransport it(node);
-  image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_raw", 1, image_callback);
+  image_transport::Subscriber sub = it.subscribe("/image_topic_2", 1, image_callback);
 
   ros::spin();
 

@@ -15,6 +15,7 @@ import numpy as np
 import rospy
 import math
 from cv_bridge import CvBridge,CvBridgeError
+from sensor_msgs.msg import CompressedImage
 import cv2
 import ros_numpy
 import ratslam.local_view_match
@@ -33,6 +34,7 @@ from tf_object_detection.config import config
 import tensorflow
 topic_root='irat_red'
 import pdb
+import cv2
 import tensorflow as tf
 from ratslam_ros.msg import signalFromCNN
 import time
@@ -66,6 +68,8 @@ allObjects_V=[]
 all_images=[]
 index_of_img=0
 
+
+
 G=ob.EM_Object_s()
 def objDetect(data,pub_ot):
     #global file
@@ -98,6 +102,13 @@ def objDetect(data,pub_ot):
     cv2.imshow('scene at time t',img)
     cv2.waitKey(1)
     cv2.destroyAllWindows()
+    bridge = CvBridge()
+    image_pub = rospy.Publisher("image_topic_2",Image)
+    image_pub.publish(bridge.cv2_to_imgmsg(img, "bgr8"))
+        
+    
+
+
 
 def listener():
     
