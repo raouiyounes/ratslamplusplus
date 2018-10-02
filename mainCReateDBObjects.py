@@ -31,6 +31,7 @@ import tensorflow as tf
 from ratslam_ros.msg import signalFromCNN
 import time
 import pdb
+import pickle
 #from src.ratslam_python.src.main_detectObjects import index_of_img
 #from src.ratslam_python.src.main_detectObjects import vObjects
 
@@ -44,7 +45,10 @@ net = object_detection.Net(graph_fp='%s/home/younes/eclipse-workspace/Hamburg_Li
 
 vObjects=ob.EM_Object_s()
 index_of_img=0
+
+'''
 def objDetect(data,file):
+	
     #global file
     global index_of_img
     e_max=4
@@ -69,12 +73,20 @@ def objDetect(data,file):
     cv2.imshow('scene at time t',img)
 
     cv2.waitKey(800)
-    cv2.destroyAllWindows()
-    
+    cv2.destroyAllWindows() 
+'''
 def listener():
+	reader=pickle.load(open('graphObj.obj','rb'))
+	
+	nd= list(reader.nodes)	
+	print nd[0]
+	'''
+    filehandler = open("graphObj.obj", 'w')
     sub=rospy.Subscriber('/camera/rgb/image_raw',Image,objDetect,file)
     rospy.spin()
-    
+    #nx.write_gml(vObjects.objects, "objectDB.gml")
+    pickle.dump(vObjects.objects, filehandler)
+    '''
 if __name__=='__main__':
     rospy.init_node('RatSLAMObjects',anonymous=True)
     listener()

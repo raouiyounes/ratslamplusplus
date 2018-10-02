@@ -86,6 +86,7 @@ void VisualOdometry::on_image(const unsigned char * data, bool greyscale, unsign
 
   convert_view_to_view_template(&vrot_profile[0], data, greyscale, VROT_IMAGE_X_MIN, VROT_IMAGE_X_MAX, VROT_IMAGE_Y_MIN, VROT_IMAGE_Y_MAX);
   visual_odo(&vrot_profile[0], vrot_profile.size(), &vrot_prev_profile[0], &dummy, vrot_rads);
+
 }
 
 void VisualOdometry::visual_odo(double *data, unsigned short width, double *olddata, double *vtrans_ms, double *vrot_rads)
@@ -145,8 +146,13 @@ void VisualOdometry::visual_odo(double *data, unsigned short width, double *oldd
   }
   *vrot_rads = minoffset * CAMERA_FOV_DEG / IMAGE_WIDTH * CAMERA_HZ * M_PI / 180.0;
   *vtrans_ms = mindiff * VTRANS_SCALING;
+std::cout<<"vtrans_msxxxxxxxxxxx"<<mindiff<<std::endl;
+
   if (*vtrans_ms > VTRANS_MAX)
     *vtrans_ms = VTRANS_MAX;
+
+
+
 
 }
 

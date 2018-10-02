@@ -6,6 +6,7 @@ import math
 from match_ponce import Matching
 from docutils.nodes import image
 
+
 '''
 Created on 23 fevr. 2018
 
@@ -95,4 +96,8 @@ class EM_Object_s(Matching):
                 
     def get_current_ob(self):
         return self.current_ob
-        
+       
+	def saveGB(self):
+		
+		nx.write_gml(self.objects, "objectDB")
+		
