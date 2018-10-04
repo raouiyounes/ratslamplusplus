@@ -46,7 +46,7 @@ net = object_detection.Net(graph_fp='%s/home/younes/eclipse-workspace/Hamburg_Li
 vObjects=ob.EM_Object_s()
 index_of_img=0
 
-'''
+
 def objDetect(data,file):
 	
     #global file
@@ -67,19 +67,24 @@ def objDetect(data,file):
         y=(position[0]+position[2])/2
         label=object["class"]
         print "label",label 
-        vObjects.addObject(x,y,label,index_of_img)
+        
+        ptOb=[cv2.KeyPoint(x,y,10)]
+		surfObj=self.surf.compute(img,ptOb)
+		
+        
+        vObjects.addObject(x,y,label,index_of_img,surfObj)
         vObjects.createEdge(x,y,label,index_of_img)
     index_of_img+=1
     cv2.imshow('scene at time t',img)
 
     cv2.waitKey(800)
     cv2.destroyAllWindows() 
-'''
+
 def listener():
 	reader=pickle.load(open('graphObj.obj','rb'))
 	
 	nd= list(reader.nodes)	
-	print nd[0]
+	print nd[0].cv, "i am here"
 	'''
     filehandler = open("graphObj.obj", 'w')
     sub=rospy.Subscriber('/camera/rgb/image_raw',Image,objDetect,file)

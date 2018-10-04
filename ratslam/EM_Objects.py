@@ -15,10 +15,11 @@ Created on 23 fevr. 2018
 
          
 class Vertex:     
-    def __init__(self,x,y,lv,index_im):
+    def __init__(self,x,y,lv,index_im,desc):
         self.cv=[x,y]
         self.lv=lv
         self.indexOfView=index_im
+        self.desc=desc
 
 class EM_Object_s(Matching):
     #index on the graph
@@ -33,8 +34,8 @@ class EM_Object_s(Matching):
         EM_Object_s.current_ob+=1
         self.graphTemplates=[]
         self.current_ob=0
-    def addObject(self,x,y,lv,index_im):
-        v=Vertex(x,y,lv,index_im)
+    def addObject(self,x,y,lv,index_im,desc):
+        v=Vertex(x,y,lv,index_im,desc)
         self.objects.add_node(v)
         return v
     def createEdge(self,x,y,lv,index_im):
