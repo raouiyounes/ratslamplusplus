@@ -53,46 +53,47 @@ class FASTSlam:
  
  # ading a loop that interates on all the objects of a precise view
 		numberOflandmarks=0
-		for i in len(self.mapR):
-			#data association
-			landmark2Object=landm2Feat(self.mapR[i])
-			#active search
-			if objectR.cv== landmark2Object.cv and objectR.lv==landmark2Object.lv and match(objectR.indexOfView,landmark2Object.indexOfView)==1:
-				distPoseLand=np.zeros(len(packetCAN.x))
-				direcPoseLand=np.zeros(len(packetCAN.x))
-				
-				# Update Kalman Filters
-				for j in len(packetCAN):
-					Mu=[mapR[i].x,mapR[i].y]
-					distPoseLand[j]=sqrt((packetCAN.x[j]-Mu[0])**2+(packetCAN.y[j]-Mu[1])**2)
-					direcPoseLand[j]=math.atan((packetCAN.y[j]-Mu[1])/(packetCAN.x[j]-Mu[0]))
-				
-					TruedistPoseLand[j]=sqrt((self.accum_delta_x-Mu[0])**2+(self.accum_delta_y-Mu[1])**2)
-					TruedirecPoseLand[j]=math.atan((self.accum_delta_y-Mu[1])/(self.accum_delta_x-Mu[0]))
-				
-					G=self.ComputeJacobG([packetCAN.x[j],packetCAN.y[j]],Mu,distPoseLand[j])
-					Qn=np.transpose(G)*Cov*G+self.Rt
+		
+		if (len(self.mapR)!=0):
+			for i in len(self.mapR):
+				#data association
+				landmark2Object=landm2Feat(self.mapR[i])
+				#active search
+				if objectR.cv== landmark2Object.cv and objectR.lv==landmark2Object.lv and match(objectR.indexOfView,landmark2Object.indexOfView)==1:
+					distPoseLand=np.zeros(len(packetCAN.x))
+					direcPoseLand=np.zeros(len(packetCAN.x))
+					# Update Kalman Filters
+					for j in len(packetCAN):
+						Mu=[mapR[i].x,mapR[i].y]
+						distPoseLand[j]=sqrt((packetCAN.x[j]-Mu[0])**2+(packetCAN.y[j]-Mu[1])**2)
+						direcPoseLand[j]=math.atan((packetCAN.y[j]-Mu[1])/(packetCAN.x[j]-Mu[0]))
 					
-					zt_pred=[distPoseLand[j] direcPoseLand[j]]
-					zt_measure=[TruedistPoseLand[j],TruedirecPoseLand[j]]
-					wn=sqrt(np.abs(2*math.pi*Qn))**-1*np.exp(-0.5*(
-					K=Cov*G*np.linalg.inv(Q)
-					Cov=(np.eye(3,3)-K*G)*Cov
-					self.updateMeasCova()
-			
-			else:
-				numberOflandmarks+=1
-	
-		if numberOflandmarks==len(mapR)-1:
-			Mu=self.feat3land(objects)
-			map_i=Map()
-			map_i.muX=Mu[0]
-			map_i.muY=Mu[1]
-			map_i.muZ=Mu[2]
-			map_i.vObject=objectR
-			self.mapR.append(map_i)
-			
-			
+						TruedistPoseLand[j]=sqrt((self.accum_delta_x-Mu[0])**2+(self.accum_delta_y-Mu[1])**2)
+						TruedirecPoseLand[j]=math.atan((self.accum_delta_y-Mu[1])/(self.accum_delta_x-Mu[0]))
+					
+						G=self.ComputeJacobG([packetCAN.x[j],packetCAN.y[j]],Mu,distPoseLand[j])
+						Qn=np.transpose(G)*Cov*G+self.Rt
+						
+						zt_pred=[distPoseLand[j] direcPoseLand[j]]
+						zt_measure=[TruedistPoseLand[j],TruedirecPoseLand[j]]
+						wn=sqrt(np.abs(2*math.pi*Qn))**-1*np.exp(-0.5*(
+						K=Cov*G*np.linalg.inv(Q)
+						Cov=(np.eye(3,3)-K*G)*Cov
+						self.updateMeasCova()
+				
+				else:
+					numberOflandmarks+=1
+		
+			if numberOflandmarks==len(mapR)-1:
+				Mu=self.feat3land(objects)
+				map_i=Map()
+				map_i.muX=Mu[0]
+				map_i.muY=Mu[1]
+				map_i.muZ=Mu[2]
+				map_i.vObject=objectR
+				self.mapR.append(map_i)
+				
+				
 			
 				
 				

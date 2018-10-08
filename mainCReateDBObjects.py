@@ -43,55 +43,56 @@ net = object_detection.Net(graph_fp='%s/home/younes/eclipse-workspace/Hamburg_Li
                            threshold=0.6)
 
 
-vObjects=ob.EM_Object_s()
+
+objectFrames=[]
 index_of_img=0
 
 
 def objDetect(data,file):
-	
-    #global file
-    global index_of_img
-    e_max=4
-    V1=ob.EM_Object_s()
-    V2=ob.EM_Object_s()
-    br = CvBridge()
-    try:
-        img=br.imgmsg_to_cv2(data,"bgr8")
-    except CvBridgeError as e:
-        print e
-    current_objects=net.predict(img,display_img=img)
-    beta=e_max/2
-    for object in current_objects:
-        position=object["bb_o"]
-        x=(position[1]+position[3])/2
-        y=(position[0]+position[2])/2
-        label=object["class"]
-        print "label",label 
-        
-        ptOb=[cv2.KeyPoint(x,y,10)]
-		surfObj=self.surf.compute(img,ptOb)
-		
-        
-        vObjects.addObject(x,y,label,index_of_img,surfObj)
-        vObjects.createEdge(x,y,label,index_of_img)
-    index_of_img+=1
-    cv2.imshow('scene at time t',img)
+	vObjects=ob.EM_Object_s()
+	global index_of_img
+	e_max=4
+	V1=ob.EM_Object_s()
+	V2=ob.EM_Object_s()
+	br = CvBridge()
+	surf=cv2.xfeatures2d.SURF_create(400)
 
-    cv2.waitKey(800)
-    cv2.destroyAllWindows() 
+	try:
+		img=br.imgmsg_to_cv2(data,"bgr8")
+	except CvBridgeError as e:
+		print e
+	current_objects=net.predict(img,display_img=img)
+	beta=e_max/2
+	for object in current_objects:
+		position=object["bb_o"]
+		x=(position[1]+position[3])/2
+		y=(position[0]+position[2])/2
+		label=object["class"]
+		print "label",label 
+		ptOb=[cv2.KeyPoint(x,y,10)]
+		surfObj=surf.compute(img,ptOb)
+		
+		vObjects.addObject(x,y,label,index_of_img,surfObj)
+		vObjects.createEdge(x,y,label,index_of_img,surfObj)
+	objectFrames.append(vObjects)
+	index_of_img+=1
+	cv2.imshow('scene at time t',img)
+
+	cv2.waitKey(800)
+	cv2.destroyAllWindows() 
 
 def listener():
-	reader=pickle.load(open('graphObj.obj','rb'))
+	#reader=pickle.load(open('graphObj.obj','rb'))
 	
-	nd= list(reader.nodes)	
-	print nd[0].cv, "i am here"
-	'''
+	#nd= list(reader.nodes)	
+	#print nd[0].cv, "i am here"
+	
     filehandler = open("graphObj.obj", 'w')
     sub=rospy.Subscriber('/camera/rgb/image_raw',Image,objDetect,file)
     rospy.spin()
-    #nx.write_gml(vObjects.objects, "objectDB.gml")
+    nx.write_gml(vObjects.objects, "objectDB.gml")
     pickle.dump(vObjects.objects, filehandler)
-    '''
+    
 if __name__=='__main__':
     rospy.init_node('RatSLAMObjects',anonymous=True)
     listener()

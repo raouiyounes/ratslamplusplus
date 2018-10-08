@@ -38,8 +38,8 @@ class EM_Object_s(Matching):
         v=Vertex(x,y,lv,index_im,desc)
         self.objects.add_node(v)
         return v
-    def createEdge(self,x,y,lv,index_im):
-        vx_i=Vertex(x,y,lv,index_im)
+    def createEdge(self,x,y,lv,index_im,desc):
+        vx_i=Vertex(x,y,lv,index_im,desc)
         for ob in list(self.objects.nodes()):
             vx=ob
             e=self.normal(vx.cv,vx_i.cv)
