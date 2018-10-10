@@ -26,5 +26,13 @@ import ratslam.FASTSlam as fslam
 fastM=fslam.FASTSlam()
 
 
-def metricalMapping(objectR,packetCAN,vtrans,vrot,time_diff_s)
+def metricalMapping(objectR,packetCAN,vtrans,vrot,time_diff_s,G_1):
+	for i in len(G1):
+		ob_i=G1[i]
+	
+	
+	
+	
+	
+	
 
