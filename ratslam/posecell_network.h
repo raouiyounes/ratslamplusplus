@@ -293,10 +293,10 @@ class PCN_tmp : public PosecellNetwork{
 	void getPacket();
 	void improvePoseofPackets();
 	void hebbianLearningWithObjects();
-	~PCN_tmp()	
+	~PCN_tmp()	;
 	
 	
-	}
+	};
 
 }
 
