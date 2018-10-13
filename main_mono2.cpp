@@ -100,10 +100,10 @@ int main (int argc, char** argv) {
     ROS_INFO_STREAM("\t MONOCULAR VISUAL ODOMETRY \n");
 
     // need the topic
-    if (argc < 2) {
+    /*if (argc < 2) {
        ROS_FATAL_STREAM("USAGE: " << argv[0] << " <topic_name>");
        exit(-1);
-    }
+    }*/
     
     ros::init(argc, argv, "RatSLAMMonocularVisualOdometry");
     ros::NodeHandle node;
@@ -120,15 +120,15 @@ int main (int argc, char** argv) {
     
     viso = new VisualOdometryMono(param);
 
-    fichier1.open("/home/h_mst/Bureau/result/stlucia_vo1_traj.txt", ios::out | ios::trunc);
-    fichier2.open("/home/h_mst/Bureau/result/stlucia_vo1_poses.txt", ios::out | ios::trunc);
+    fichier1.open("/home/younes/eclipse-workspace/CSAIL_Lim/office_traj.txt", ios::out | ios::trunc);
+    fichier2.open("/home/younes/eclipse-workspace/CSAIL_Lim/office_poses.txt", ios::out | ios::trunc);
     if(!fichier1 || !fichier2) {
 	cerr << "Impossible d'ouvrir les fichiers !" << endl;
     }
     fichier1 << in << " " << pose.val[0][3] << " " << pose.val[2][3] << " " << x << " " << y << endl;
 
     image_transport::ImageTransport it(node);
-    image_transport::Subscriber sub = it.subscribe(topic_root + "/camera/image", 10, image_callback);
+    image_transport::Subscriber sub = it.subscribe( "/camera/rgb/image_raw", 10, image_callback);
     ros::spin();
     
     // exit

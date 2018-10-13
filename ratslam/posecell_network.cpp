@@ -1071,5 +1071,7 @@ void PosecellNetwork::on_view_template(unsigned int vt, double vt_rad)
 vt_update = true;
 }
 
+
+
 } // namespace ratslam
 
