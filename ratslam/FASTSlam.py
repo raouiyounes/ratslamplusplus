@@ -13,6 +13,18 @@ class Map:
 		self.muY=0
 		self.muZ=0
 		self.vObject=Vertex()
+
+
+
+class Robot: 
+    def __init__(self):
+        self.x=random.random()*world_size
+        self.y=random.random()*world_size
+        self.orientation=random.random()*2.0*pi
+        self.forward_noise=0.0
+        self.turn_noise=0.0
+        self.sense_noise=0.0
+
 class FASTSlam:
 	
 	def __init__(self,groundTruth):
@@ -27,7 +39,9 @@ class FASTSlam:
 		self.EXP_INITIAL_EM_DEG=90.0
         self.accum_delta_facing=self.EXP_INITIAL_EM_DEG*math.pi/180
 		self.accum_delta_x=0
-		self.accum_delta_y=0
+		self.accum_delta_y=0		
+		# particles
+		self.p=[]
 		
 	# receive packet from can and place it in a list
 	def setPacket(self,packetCAN):
@@ -37,6 +51,10 @@ class FASTSlam:
 		pk.th=packetCAN.th
 		self.packets.append(pk)
 	# compute the 3D coordinate of an object	
+	
+	def RaoBlackwellizedF(self):
+	
+	
 	def t3DObject(self,objectR):
 		
 	# data association

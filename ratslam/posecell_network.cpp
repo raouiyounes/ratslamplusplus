@@ -1073,5 +1073,15 @@ vt_update = true;
 
 
 
+
+ Posecell *** PCN_tmp::getPacket(){
+	
+	return posecells;
+	
+	
+}
+
+
+
 } // namespace ratslam
 

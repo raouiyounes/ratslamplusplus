@@ -20,7 +20,6 @@ import ratslam.EM_Objects as ob
 
 # Import custom message data.
 from ratslam_ros.msg import NodeExampleData
-counter = 0
 timo=0
 prev_time=0
 pc_output=TopologicalAction()
@@ -51,7 +50,6 @@ class  POSE:
 			#self.signGlob=0
 			global prev_time
 			if (prev_time>0):
-				global counter
 				pc_output.src_id=pc.get_current_exp_id()
 				time_diff_robot=odom_data.header.stamp.to_sec()-prev_time
 				pc.on_odo(odom_data.twist.twist.linear.x, odom_data.twist.twist.angular.z, time_diff_robot);

@@ -284,16 +284,20 @@ public:
 };
 
 
-
-class PCN_tmp : public PosecellNetwork{
 	
+class PCN_tmp:public PosecellNetwork{
+	public:
 	std::vector<double>  weightsOfGridCells;
 	
-	PCN_tmp();
-	void getPacket();
+	PCN_tmp(ptree settings):PosecellNetwork(settings){
+		
+		
+		
+		}
+	 Posecell ***  getPacket();
 	void improvePoseofPackets();
 	void hebbianLearningWithObjects();
-	~PCN_tmp()	;
+	~PCN_tmp();
 	
 	
 	};
