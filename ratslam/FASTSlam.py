@@ -29,6 +29,7 @@ class FASTSlam:
 	
 	def __init__(self,groundTruth):
 		
+		
 		pk=packet()
 		self.truePose=groundTruth	
 		# all the poses of the robot as obtained from pcn
@@ -42,8 +43,35 @@ class FASTSlam:
 		self.accum_delta_y=0		
 		# particles
 		self.p=[]
+		self.objectObsDb=dict()
+		
+	
+	def initiateParticles(self):
+		for i in range(1000):
+			r=Robot()
+			self.p.append(r)
 		
 	# receive packet from can and place it in a list
+	
+	# computation of a fingerprint of the observations of objects
+	def computeFingerPrint(self):
+		#objects detected objects at time t
+		detectedObj=dict()
+		for i in len(objects):
+			ob=objects[i]
+			if ob in self.objectObsDb:
+				detectedObj[ob]+=1
+			else:
+				detectedObj[ob]=1
+		for i in detectedObj:
+			if i in self.objectObsDb :
+				self.objectObsDb[i]+=1
+			else:
+				self.objectObsDb[i]=1
+				
+		return detectedObj
+	
+	
 	def setPacket(self,packetCAN):
 		pk=packet()
 		pk.x=packetCAN.x
@@ -52,8 +80,25 @@ class FASTSlam:
 		self.packets.append(pk)
 	# compute the 3D coordinate of an object	
 	
-	def RaoBlackwellizedF(self):
 	
+	def getWeights(self):
+		
+	
+	def RaoBlackwellizedF(self):
+		myrobot=robot()
+		for i in len(self.p):
+			r=robot()
+            r.set_noise(0.05, 0.05, 5.0)
+			p.append(r)
+		 myrobot=myrobot.move(0.1,0.5)
+		 p2=[]
+         for i in range(N):
+			 p2.append(p[i].move(0.1,0.5))
+		 p=p2
+		 w=getWeights()
+		 
+		  
+			
 	
 	def t3DObject(self,objectR):
 		
