@@ -70,7 +70,14 @@ class FASTSlam:
 				self.objectObsDb[i]=1
 				
 		return detectedObj
+
+
+
+
+
 	
+	def sampling(self):
+		
 	
 	def setPacket(self,packetCAN):
 		pk=packet()
@@ -81,8 +88,15 @@ class FASTSlam:
 	# compute the 3D coordinate of an object	
 	
 	
-	def getWeights(self):
-		
+	def associatePack2Par(self,packetCAN):
+		sortedCANindex=sorted(range(len(packetCAN)), key=lambda k: packetCAN[k])
+		dist=particlePose-groundTruth
+			
+			
+	
+	
+	def getWeights(self,pcnWeights):
+		self.weights=pcnWeights
 	
 	def RaoBlackwellizedF(self):
 		myrobot=robot()

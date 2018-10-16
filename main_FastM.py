@@ -20,9 +20,6 @@ import ratslam.EM_Objects as ob
 import ratslam.FASTSlam as fslam
 
 
-
-
-
 fastM=fslam.FASTSlam()
 rospy.Subscriber("/odom",odom_callbck,self.callback,(pc,pub_pc))
 
@@ -34,9 +31,7 @@ i=0
 
 p=[]
 
-def metricalMapping(objectR,packetCAN):
-	
-
+def metricalMapping(objectR,packetCAN):	
 	currentObjects=Observation[i]	
 	for i in len(G1):
 		ob_i=G1[i]
