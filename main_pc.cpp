@@ -36,6 +36,8 @@
 #include <nav_msgs/Odometry.h>
 #include <ratslam_ros/ViewTemplate.h>
 #include <ratslam_ros/GraphObjectTemplate.h>
+#include <ratslam_ros/weights.h>
+
 #include <fstream>
 #if HAVE_IRRLICHT
 #include "graphics/posecell_scene.h"
@@ -50,19 +52,33 @@ using namespace ratslam;
 ofstream pose_of_my_robot("poses_my_robot.txt");
 ofstream file_for_time("time.txt");
 ratslam_ros::TopologicalAction pc_output;
+
+
+ros::NodeHandle node;
+
+ros::Publisher pub_whgts = node.advertise<ratslam_ros::weights>(+"/weights", 0);
+
 static void odo_callback(nav_msgs::OdometryConstPtr odo, ratslam::PCN_tmp *pc, ros::Publisher * pub_pc)
 {
 
   ROS_DEBUG_STREAM("PC:odo_callback{" << ros::Time::now() << "} seq=" << odo->header.seq << " v=" << odo->twist.twist.linear.x << " r=" << odo->twist.twist.angular.z);
   static ros::Time prev_time(0);
+  ratslam_ros::weights  wghts;
   if (prev_time.toSec() > 0)
   {
     double time_diff = (odo->header.stamp - prev_time).toSec();
     pc_output.src_id = pc->get_current_exp_id();
     pc->on_odo(odo->twist.twist.linear.x,odo->twist.twist.angular.z,time_diff);
     
-   Posecell weights_i=pc.getPacket();
-    
+   Posecell ***weights_i=pc->getPacket();
+    int i,j,k;
+    vector<double> weight1D;
+    for(i=0;i<21;i++)
+		for(j=0;j<21;j++)
+			for(k=0;k<36;k++)
+			    wghts.weight.push_back(weights_i[i][j][k]);
+    //wghts.weight=weight1D;
+    pub_whgts.publish(wghts);
     pc_output.action = pc->get_action();
 
     if (pc_output.action != ratslam::PosecellNetwork::NO_ACTION)
@@ -84,8 +100,10 @@ static void odo_callback(nav_msgs::OdometryConstPtr odo, ratslam::PCN_tmp *pc, r
 	}
 #endif
   */
-std::cout<<"x= :"<<pc->best_x<<"\n";
+//std::cout<<"x= :"<<pc->best_x<<"\n";
 pose_of_my_robot<<pc->best_x<<" "<<pc->best_y<<" "<<pc->best_th<<endl;
+
+std::cout<<"weights"<<pc->posecells[0][0][0];
 
 }
   prev_time = odo->header.stamp;
@@ -122,6 +140,14 @@ static void template_callbackv(ratslam_ros::ViewTemplateConstPtr vt, ratslam::Po
 #endif
 */
 }
+
+
+static void weight_callback(ratslam::PosecellNetwork *pc){
+	
+	
+	
+	
+	}
 
 
 

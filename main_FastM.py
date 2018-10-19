@@ -32,6 +32,14 @@ i=0
 p=[]
 
 def metricalMapping(objectR,packetCAN):	
+	
+	for i in range(2):
+		forj in range(21):
+			for k in range(36):
+				weight3D[i][j][k]=packetCAN[l];
+				l+=1
+	
+	
 	currentObjects=Observation[i]	
 	for i in len(G1):
 		ob_i=G1[i]
@@ -61,8 +69,8 @@ def odom_callbck(odom_data):
 def listener(self):
 		
 		# subscribe to odom and weight topics
-		rospy.Subscriber("/odom",odom_callbck,self.callback,(pc,pub_pc))
-		rospy.Subscriber('/Weights',metricalMapping,(pc,pub_pc))
+		#rospy.Subscriber("/odom",odom_callbck,self.callback,(pc,pub_pc))
+		rospy.Subscriber('/Weights',metricalMapping)
 		
 		
 		

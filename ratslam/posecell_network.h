@@ -243,7 +243,7 @@ public:
 
   bool odo_update;
   bool vt_update;
-
+public:
   Posecell *** posecells;
   Posecell * posecells_memory;
   int posecells_memory_size;
