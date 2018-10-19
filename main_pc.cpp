@@ -54,11 +54,7 @@ ofstream file_for_time("time.txt");
 ratslam_ros::TopologicalAction pc_output;
 
 
-ros::NodeHandle node;
-
-ros::Publisher pub_whgts = node.advertise<ratslam_ros::weights>(+"/weights", 0);
-
-static void odo_callback(nav_msgs::OdometryConstPtr odo, ratslam::PCN_tmp *pc, ros::Publisher * pub_pc)
+static void odo_callback(nav_msgs::OdometryConstPtr odo, ratslam::PCN_tmp *pc, ros::Publisher * pub_pc,ros::Publisher * pub_whgts)
 {
 
   ROS_DEBUG_STREAM("PC:odo_callback{" << ros::Time::now() << "} seq=" << odo->header.seq << " v=" << odo->twist.twist.linear.x << " r=" << odo->twist.twist.angular.z);
@@ -68,17 +64,14 @@ static void odo_callback(nav_msgs::OdometryConstPtr odo, ratslam::PCN_tmp *pc, r
   {
     double time_diff = (odo->header.stamp - prev_time).toSec();
     pc_output.src_id = pc->get_current_exp_id();
-    pc->on_odo(odo->twist.twist.linear.x,odo->twist.twist.angular.z,time_diff);
-    
-   Posecell ***weights_i=pc->getPacket();
-    int i,j,k;
-    vector<double> weight1D;
-    for(i=0;i<21;i++)
-		for(j=0;j<21;j++)
-			for(k=0;k<36;k++)
-			    wghts.weight.push_back(weights_i[i][j][k]);
-    //wghts.weight=weight1D;
-    pub_whgts.publish(wghts);
+   pc->on_odo(odo->twist.twist.linear.x,odo->twist.twist.angular.z,time_diff);
+   
+   
+ vector<vector<vector<float> > >weights;
+weights=pc->getEnergy();
+
+
+    pub_whgts->publish(wghts);
     pc_output.action = pc->get_action();
 
     if (pc_output.action != ratslam::PosecellNetwork::NO_ACTION)
@@ -142,12 +135,6 @@ static void template_callbackv(ratslam_ros::ViewTemplateConstPtr vt, ratslam::Po
 }
 
 
-static void weight_callback(ratslam::PosecellNetwork *pc){
-	
-	
-	
-	
-	}
 
 
 
@@ -188,7 +175,9 @@ int main(int argc, char * argv[])
   ratslam::PCN_tmp * pc = new ratslam::PCN_tmp(ratslam_settings);
 
   ros::Publisher pub_pc = node.advertise<ratslam_ros::TopologicalAction>(topic_root+"/PoseCell/TopologicalAction", 0);
-  ros::Subscriber sub_odometry = node.subscribe<nav_msgs::Odometry>(topic_root + "/odom", 0, boost::bind(odo_callback, _1, pc, &pub_pc), ros::VoidConstPtr(),
+ros::Publisher pub_whgts = node.advertise<ratslam_ros::weights>("/weights", 0);
+
+  ros::Subscriber sub_odometry = node.subscribe<nav_msgs::Odometry>(topic_root + "/odom", 0, boost::bind(odo_callback, _1, pc, &pub_pc,&pub_whgts), ros::VoidConstPtr(),
                                                                     ros::TransportHints().tcpNoDelay());
 
   ros::Subscriber sub_template = node.subscribe<ratslam_ros::ViewTemplate>(topic_root+"/LocalView/Template", 0, boost::bind(template_callbackv, _1, pc, &pub_pc),

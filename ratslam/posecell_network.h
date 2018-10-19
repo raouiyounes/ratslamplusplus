@@ -50,10 +50,10 @@ typedef double Posecell;
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/split_member.hpp>
-
+#include <vector>
 namespace ratslam
 {
-
+using namespace std;
 struct PosecellVisualTemplate
 {
         unsigned int id;
@@ -90,7 +90,7 @@ public:
   PosecellNetwork(ptree settings);
   ~PosecellNetwork();
 
-  void on_odo(double vtrans, double vrot, double time_diff_s);
+  void  on_odo(double vtrans, double vrot, double time_diff_s);
 
   void on_view_template(unsigned int vt, double vt_rad);
 
@@ -203,6 +203,7 @@ private:
 
   // find an approximation of the centre of the energy
   // packet.
+  public:
   double find_best();
 
   PosecellNetwork()
@@ -280,6 +281,7 @@ public:
 
   unsigned int current_vt, prev_vt;
   unsigned int current_exp, prev_exp;
+	 Posecell ***  getPacket();
 
 };
 
@@ -294,9 +296,11 @@ class PCN_tmp:public PosecellNetwork{
 		
 		
 		}
-	 Posecell ***  getPacket();
 	void improvePoseofPackets();
 	void hebbianLearningWithObjects();
+     vector<vector<vector<float> > > getEnergy();
+
+	
 	~PCN_tmp();
 	
 	

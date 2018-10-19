@@ -34,6 +34,8 @@
 
 #include <float.h>
 
+
+#include <vector>
 using namespace std;
 
 namespace ratslam
@@ -1071,17 +1073,31 @@ void PosecellNetwork::on_view_template(unsigned int vt, double vt_rad)
 vt_update = true;
 }
 
+vector<vector<vector<float> > > PCN_tmp::getEnergy(){
+vector<vector<vector<float> > > weights;
+	int i,j,k;
+	float max;
+vector<vector<float> >pxy;
+vector<float> px;
+cout<<PC_DIM_TH<<endl;
 
-
-
- Posecell *** PCN_tmp::getPacket(){
-	
-	return posecells;
-	
-	
+for (k = 0; k < PC_DIM_TH; k++)
+	{
+	  for (j = 0; j < PC_DIM_XY; j++)
+	   {
+			for (i = 0; i < PC_DIM_XY; i++)
+	     {
+	    max = posecells[k][j][i];
+	    px.push_back(max);
+}
+		pxy.push_back(px);
+	    px.clear();
+	   }
+	  weights.push_back(pxy);
+	  pxy.clear();
+	 }
+return weights;
 }
 
 
-
 } // namespace ratslam
-
