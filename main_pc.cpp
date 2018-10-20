@@ -62,13 +62,26 @@ static void odo_callback(nav_msgs::OdometryConstPtr odo, ratslam::PCN_tmp *pc, r
   ratslam_ros::weights  wghts;
   if (prev_time.toSec() > 0)
   {
-    double time_diff = (odo->header.stamp - prev_time).toSec();
+    float time_diff = (odo->header.stamp - prev_time).toSec();
     pc_output.src_id = pc->get_current_exp_id();
    pc->on_odo(odo->twist.twist.linear.x,odo->twist.twist.angular.z,time_diff);
    
    
  vector<vector<vector<float> > >weights;
 weights=pc->getEnergy();
+
+int i,j,k;
+
+std::vector<vector<float>> weight_i;
+vector<float> weight_ij;
+for(i=0;i<weights.size();i++){
+
+for(j=0;j<weights.at(i).size();j++){
+//weight_ij=weights.at(i).at(j);
+for(k=0;k<weights.at(i).at(j).size();k++)
+wghts.weight.push_back(weights.at(i).at(j).at(k));
+}}
+
 
 
     pub_whgts->publish(wghts);

@@ -1079,7 +1079,6 @@ vector<vector<vector<float> > > weights;
 	float max;
 vector<vector<float> >pxy;
 vector<float> px;
-cout<<PC_DIM_TH<<endl;
 
 for (k = 0; k < PC_DIM_TH; k++)
 	{
