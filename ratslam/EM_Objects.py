@@ -5,7 +5,7 @@ import numpy as np
 import math
 from match_ponce import Matching
 from docutils.nodes import image
-
+import cv2
 
 '''
 Created on 23 fevr. 2018
@@ -34,6 +34,7 @@ class EM_Object_s(Matching):
         EM_Object_s.current_ob+=1
         self.graphTemplates=[]
         self.current_ob=0
+        self.feat_object=cv2.xfeatures2d.SURF_create(400)
     def addObject(self,x,y,lv,index_im,desc):
         v=Vertex(x,y,lv,index_im,desc)
         self.objects.add_node(v)
@@ -64,10 +65,12 @@ class EM_Object_s(Matching):
             position=object["bb_o"]
             x=(position[1]+position[3])/2
             y=(position[0]+position[2])/2
+            pt=[cv2.KeyPoint(x,y,10)]
+            desc=self.feat_object.compute(image,pt)
+            print list(desc), "ggg"
             label=object["class"]
-            self.addObject(x, y, label,index_of_img)
-            #self.V.addObject(x, y, label,index_of_img)
-        
+            self.addObject(x, y, label,index_of_img,desc)
+
         self.graphTemplates.append(self.objects)
         return self.objects
     

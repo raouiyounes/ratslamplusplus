@@ -47,9 +47,9 @@ net = object_detection.Net(graph_fp='%s/home/younes/eclipse-workspace/Hamburg_Li
 objectFrames=[]
 index_of_img=0
 
+vObjects=ob.EM_Object_s()
 
 def objDetect(data,file):
-	vObjects=ob.EM_Object_s()
 	global index_of_img
 	e_max=4
 	V1=ob.EM_Object_s()
@@ -71,9 +71,10 @@ def objDetect(data,file):
 		print "label",label 
 		ptOb=[cv2.KeyPoint(x,y,10)]
 		surfObj=surf.compute(img,ptOb)
-		
-		vObjects.addObject(x,y,label,index_of_img,surfObj)
-		vObjects.createEdge(x,y,label,index_of_img,surfObj)
+		a=surfObj[1]
+		listsurf= a.tolist()
+		vObjects.addObject(x,y,label,index_of_img,listsurf)
+		vObjects.createEdge(x,y,label,index_of_img,listsurf)
 	objectFrames.append(vObjects)
 	index_of_img+=1
 	cv2.imshow('scene at time t',img)
@@ -82,17 +83,16 @@ def objDetect(data,file):
 	cv2.destroyAllWindows() 
 
 def listener():
-	#reader=pickle.load(open('graphObj.obj','rb'))
+	reader=pickle.load(open('graphObj.obj','rb'))
 	
-	#nd= list(reader.nodes)	
-	#print nd[0].cv, "i am here"
-	
+	nd= list(reader.nodes)	
+	print nd[0].desc, "i am here"
+	'''
     filehandler = open("graphObj.obj", 'w')
     sub=rospy.Subscriber('/camera/rgb/image_raw',Image,objDetect,file)
     rospy.spin()
-    nx.write_gml(vObjects.objects, "objectDB.gml")
     pickle.dump(vObjects.objects, filehandler)
-    
+    '''
 if __name__=='__main__':
     rospy.init_node('RatSLAMObjects',anonymous=True)
     listener()
