@@ -3,6 +3,10 @@ import cv2
 import numpy as np
 import pdb
 from cmath import sqrt
+import itertools
+import pickle
+#pdb.set_trace()
+
 class Object:
 	def __init__(self):
 		self.x_i=0
@@ -166,5 +170,19 @@ class Matching:
 		return scoreX		
 
 	
+
+	def compute_X_Ross(self):
+		Vl_1=list(self.V1.nodes)
+		Vl_2=list(self.V2.nodes)
+
+		for L in range(0, len(Vl_2)+1):
+			for subset in itertools.combinations(stuff, L):
+				print(subset)
+
+
+
+
+
+
 	def create_Hstar(self):
 		self.Hstar=self.Hr*self.Hl

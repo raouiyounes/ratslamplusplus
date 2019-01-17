@@ -69,7 +69,7 @@ class EM_Object_s(Matching):
         self.graphTemplates.append(self.objects)
         return self.objects
     
-    # ompare between the actual grapg and all the graphs of objects
+    # ompare between the actual graph and all the graphs of objects
     def compare(self,V1):
         
         score=[]
@@ -85,6 +85,7 @@ class EM_Object_s(Matching):
                             H[i][j][k][l]=Hr[i][j][k][l]*Hl[i][j][k][l]
             
             score.append(self.compute_X(H))
+            score.append(self.compute_X_Ross())
         
         minScore=min(score)
         print  "minScore",minScore 
@@ -92,7 +93,14 @@ class EM_Object_s(Matching):
             self.current_ob=score.index(minScore)
         else:
             self.current_ob+=1
-                
+    
+
+
+
+
+
+
+
     def get_current_ob(self):
         return self.current_ob
         

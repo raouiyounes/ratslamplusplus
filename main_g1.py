@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
 '''
@@ -40,6 +40,8 @@ import pyrosbag as prb
 import pdb
 from ratslam.match_ponce import Matching
 from ratslam_ros.msg import GraphObjectTemplate
+import pickle
+
 INTERVAL=3
 
 # vector that computes the scores of X
@@ -66,13 +68,19 @@ allObjects_V=[]
 all_images=[]
 index_of_img=0
 
+reader=pickle.load(open('/home/younes/workMOON/prjMapping/CSAIL_Lim/src/ratslam_python/src/graphObjdb.obj','rb'))
+    
+objectsVertices= list(reader.nodes)  
+
+step=0
+
 G=ob.EM_Object_s()
 def objDetect(data,pub_ot):
+    global step
     #global file
     global index_of_img
     e_max=4
     V1=ob.EM_Object_s()
-    pub_cnn.publish(0.0)
     br = CvBridge()
     V_temp=ob.EM_Object_s()
 
@@ -81,7 +89,8 @@ def objDetect(data,pub_ot):
     except CvBridgeError as e:
         print e
       
-    current_objects=net.predict(img,display_img=img)
+    current_objects=objectsVertices[step]
+    print(current_objects)
     beta=e_max/2
     all_images.append(img)
     
@@ -98,6 +107,7 @@ def objDetect(data,pub_ot):
     cv2.imshow('scene at time t',img)
     cv2.waitKey(1)
     cv2.destroyAllWindows()
+    step+=1
 
 def listener():
     
