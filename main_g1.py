@@ -41,6 +41,7 @@ import pdb
 from ratslam.match_ponce import Matching
 from ratslam_ros.msg import GraphObjectTemplate
 import pickle
+from collections import defaultdict
 
 INTERVAL=3
 
@@ -74,7 +75,7 @@ objectsVertices= list(reader.nodes)
 
 step=0
 
-G=ob.EM_Object_s()
+G=ob.EM_Object_s(objectsVertices)
 def objDetect(data,pub_ot):
     global step
     #global file
@@ -82,19 +83,24 @@ def objDetect(data,pub_ot):
     e_max=4
     V1=ob.EM_Object_s()
     br = CvBridge()
-    V_temp=ob.EM_Object_s()
 
     try:
         img=br.imgmsg_to_cv2(data,"bgr8")
     except CvBridgeError as e:
         print e
       
-    current_objects=objectsVertices[step]
-    print(current_objects)
+    groups = defaultdict(list)
+    for obj in objectsVertices:
+        groups[obj.indexOfView].append(obj)
+
+
+    current_objects=groups[step]
+
+
     beta=e_max/2
     all_images.append(img)
     
-    O=G.on_objects(current_objects,img,index_of_img)
+    O=G.on_objects(current_objects,img,step)
     index_of_img+=1
     G.compare(O)
     ot_output=GraphObjectTemplate()

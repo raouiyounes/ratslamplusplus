@@ -21,8 +21,13 @@ class Vertex:
 
 class EM_Object_s(Matching):
     #index on the graph
+
+
     current_ob=0
-    def __init__(self):
+    
+
+    def __init__(self,objectsVertices):
+    
         self.minMatchingScore=0
         self.V1=[]
         self.objetGraphTemplates=[]
@@ -32,10 +37,13 @@ class EM_Object_s(Matching):
         EM_Object_s.current_ob+=1
         self.graphTemplates=[]
         self.current_ob=0
+    
     def addObject(self,x,y,lv,index_im):
+    
         v=Vertex(x,y,lv,index_im)
         self.objects.add_node(v)
         return v
+    
     def createEdge(self,x,y,lv,index_im):
         vx_i=Vertex(x,y,lv,index_im)
         for ob in list(self.objects.nodes()):
@@ -52,21 +60,24 @@ class EM_Object_s(Matching):
         return np.mean(e)
     
  
-    #def createGTemplate(self):
     
     def reset(self):
         self.objects.clear()
+    
+
     def on_objects(self,current_objects,image,index_of_img):
         self.imageTemplate.append(image)
         for object in current_objects:
-            position=object["bb_o"]
-            x=(position[1]+position[3])/2
-            y=(position[0]+position[2])/2
-            label=object["class"]
+            
+            x=object.cv[0]
+            y=object.cv[1]
+            label=object.lv
             self.addObject(x, y, label,index_of_img)
-            #self.V.addObject(x, y, label,index_of_img)
         
         self.graphTemplates.append(self.objects)
+        
+        self.compute_G1(current_objects)
+
         return self.objects
     
     # ompare between the actual graph and all the graphs of objects
@@ -84,8 +95,8 @@ class EM_Object_s(Matching):
                         for l in range(len(Hr[0][0][0])):
                             H[i][j][k][l]=Hr[i][j][k][l]*Hl[i][j][k][l]
             
-            score.append(self.compute_X(H))
-            score.append(self.compute_X_Ross())
+            #score.append(self.compute_X(H))
+            score.append(self.compute_X())
         
         minScore=min(score)
         print  "minScore",minScore 
@@ -104,3 +115,17 @@ class EM_Object_s(Matching):
     def get_current_ob(self):
         return self.current_ob
         
+
+
+    def compute_G1(self):   
+        for o in current_objects:
+            selg.G1.appen(o)
+
+
+        
+
+
+
+
+
+
