@@ -13,70 +13,64 @@ Created on 23 fevr. 2018
 '''
 
          
-class Vertex:     
-    def __init__(self,x,y,lv,index_im):
-        self.cv=[x,y]
-        self.lv=lv
-        self.indexOfView=index_im
 
-class EM_Object_s(Matching):
-    #index on the graph
+class DbObjects:
+
+    def __init__(self,objectsDb):
+        self.constructGraph()
+
+     def constructGraph(self):
+        self.topoMap= nx.Graph()
+        for ob in self.objectsDb:
+            vertex_i=Vertex(ob.cv,ob.label,ob.index_of_img,ob.listsurf)
+            self.topoMap.add_node(vertex_i)
+
+        for vx_0 in self.topoMap:
+            for vx_1 in self.topoMap:
+                if vx_0!=vx_1:
+                    e=self.normal(vx_0.cv,vx_1.cv)    
+                        if e<self.e_max:
+                            self.topoMap.add_edge(vx_0,vx_1)
 
 
-    current_ob=0
-    
-
-    def __init__(self,objectsVertices):
-    
-        self.minMatchingScore=0
-        self.V1=[]
-        self.objetGraphTemplates=[]
-        self.objects=nx.Graph()
-        self.emax=150
-        self.imageTemplate=[]
-        EM_Object_s.current_ob+=1
-        self.graphTemplates=[]
-        self.current_ob=0
-    
-    def addObject(self,x,y,lv,index_im):
-    
-        v=Vertex(x,y,lv,index_im)
-        self.objects.add_node(v)
-        return v
-    
-    def createEdge(self,x,y,lv,index_im):
-        vx_i=Vertex(x,y,lv,index_im)
-        for ob in list(self.objects.nodes()):
-            vx=ob
-            e=self.normal(vx.cv,vx_i.cv)
-            
-            if (e<self.emax and ob!=vx_i):
-                self.objects.add_edge(vx,vx_i)
-            
     def normal(self,cvi,cvj):
         sigma=0.2
         mean=math.sqrt((cvi[0]-cvj[1])**2+(cvj[0]-cvj[1])**2)
         e=np.random.normal(mean,sigma,1000)
         return np.mean(e)
     
- 
-    
-    def reset(self):
-        self.objects.clear()
+
+
+
+class Vertex:     
+    def __init__(self,cv_i,label,index_of_img,listsurf):
+        self.cv=cv_i
+        self.lv=label
+        self.indexOfView=index_of_img
+        self.surf=listsurf
+
+class currentOobject(Matching):
+    #index on the graph
+
+
+    current_ob=0
     
 
-    def on_objects(self,current_objects,image,index_of_img):
-        self.imageTemplate.append(image)
-        for object in current_objects:
+    def __init__(self):
+    
+        self.objetGraphTemplates=[]
+        self.e_max=4
+        
+ 
+    
+    
+
+    def on_objects(self,newObj):
+        
+        self.newObj=newObj
+        vertex_i=Vertex(newObj.cv,newObj.label,newObj.index_of_img,newObj.listsurf)
             
-            x=object.cv[0]
-            y=object.cv[1]
-            label=object.lv
-            self.addObject(x, y, label,index_of_img)
-        
-        self.graphTemplates.append(self.objects)
-        
-        self.compute_G1(current_objects)
+        self.compute_G1(newObj)
 
         return self.objects
     
@@ -118,12 +112,21 @@ class EM_Object_s(Matching):
 
 
     def compute_G1(self):   
-        for o in current_objects:
-            selg.G1.appen(o)
-
-
+        #add the new current object to G1 
+        H=nx.DiGraph(self.topoMap)
         
+        #create subgraph
+        descendents=list(H.successors(self.newObj))
+        self.subgraphG1=nx.subgraph(self.topoMap,[self.newObj,descendents])
 
+
+
+    def compute_G2(self):
+        for ob in self.topoMap.nodes:
+            if ob not in  self.subgraphG1.nodes:
+                nbunch.append(ob)
+        self.subgraphG2=nx.subgraph(self.topoMap,nbunch)
+        
 
 
 

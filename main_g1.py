@@ -75,32 +75,21 @@ objectsVertices= list(reader.nodes)
 
 step=0
 
-G=ob.EM_Object_s(objectsVertices)
+
+db=DbObjects(objectsVertices)
+G=ob.currentOobject((objectsVertices))
 def objDetect(data,pub_ot):
     global step
     #global file
     global index_of_img
+    # for comparison
     e_max=4
-    V1=ob.EM_Object_s()
-    br = CvBridge()
-
-    try:
-        img=br.imgmsg_to_cv2(data,"bgr8")
-    except CvBridgeError as e:
-        print e
-      
-    groups = defaultdict(list)
-    for obj in objectsVertices:
-        groups[obj.indexOfView].append(obj)
-
-
-    current_objects=groups[step]
-
-
     beta=e_max/2
-    all_images.append(img)
-    
-    O=G.on_objects(current_objects,img,step)
+
+   
+  
+
+    O=G.currentOobject(objectsVertices[step])
     index_of_img+=1
     G.compare(O)
     ot_output=GraphObjectTemplate()
