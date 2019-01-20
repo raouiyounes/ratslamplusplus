@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon[fr_FR]=gnome-panel-launcher
+Exec=/home/younes/pycharm-community-2018.3.3/bin/pycharm.sh
+Name[fr_FR]=Pycharm2018
+Name=Pycharm2018
+Icon=gnome-panel-launcher

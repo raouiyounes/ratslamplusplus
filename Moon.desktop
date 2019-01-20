@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon[fr_FR]=gnome-panel-launcher
+Name[fr_FR]=Moon
+Exec=gnome-desktop-item-edit ~/Bureau/WokMoon --create-new
+Name=Moon
+Icon=gnome-panel-launcher

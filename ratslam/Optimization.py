@@ -71,11 +71,11 @@ class currentOobject(Matching):
         return self.objects
     
     # ompare between the actual graph and all the graphs of objects
-    def compare(self,V1):
+    def OptimizationScore(self):
         
         score=[]
         for oneObjectTemplate in self.graphTemplates:
-            Matching.__init__(self, V1, oneObjectTemplate, self.imageTemplate)        
+            Matching.__init__(self, self.subgraphG1, self.subgraphG2, self.imageTemplate)        
             Hl=self.create_Hl()
             Hr=self.create_Hr()
             H=[[[[0]*len(Hr[0][0][0])]*len(Hr[0][0])]*len(Hr[0])]*len(Hr)

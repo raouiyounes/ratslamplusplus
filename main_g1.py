@@ -26,7 +26,7 @@ from sensor_msgs.msg import PointCloud2
 from ratslam_ros.msg import VisualObjet
 from cmath import sqrt
 import ratslam.networkx as nx
-import ratslam.EM_Objects as ob
+import ratslam.Optimization as ob
 import matplotlib.pyplot as plt
 from tf_object_detection.models import object_detection 
 from tf_object_detection.config import config
@@ -45,29 +45,7 @@ from collections import defaultdict
 
 INTERVAL=3
 
-# vector that computes the scores of X
 
-scoreXVector=[]
-#pdb.set_trace()
-vObjects=ob.EM_Object_s()
-G=nx.Graph()
-
-""" code of detection"""
-
-model_name = config.models["2"]
-net = object_detection.Net(graph_fp='%s/home/younes/eclipse-workspace/Hamburg_Lim/src/ratslam_python/src/tf_object_detection/faster_rcnn_resnet101_coco_11_06_2017/frozen_inference_graph.pb' %'',
-                           labels_fp='/home/younes/eclipse-workspace/Hamburg_Lim/src/ratslam_python/src/tf_object_detection/data/label.pbtxt',
-                           num_classes=90,
-                           threshold=0.6)
-CAMERA_MODE = 'camera'
-STATIC_MODE = 'static'
-IMAGE_SIZE = 320
-vObjects=ob.EM_Object_s()
-V=ob.EM_Object_s()
-pub_cnn=rospy.Publisher(topic_root+"/signalCNN",signalFromCNN,queue_size=0)
-allObjects_V=[]
-all_images=[]
-index_of_img=0
 
 reader=pickle.load(open('/home/younes/workMOON/prjMapping/CSAIL_Lim/src/ratslam_python/src/graphObjdb.obj','rb'))
     
@@ -86,11 +64,20 @@ def objDetect(data,pub_ot):
     e_max=4
     beta=e_max/2
 
-   
-  
+    currentVertex=currentVertex(indexOfVertex)
+
+    object.on_object(currentVertex)
+    object.compute_G1()
+    object.compute_G2()
+
+    object.OptimizationScore()
+
 
     O=G.currentOobject(objectsVertices[step])
     index_of_img+=1
+
+
+
     G.compare(O)
     ot_output=GraphObjectTemplate()
     ot_output.header.stamp=rospy.Time.now()
