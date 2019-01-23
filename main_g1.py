@@ -48,32 +48,33 @@ INTERVAL=3
 
 
 reader=pickle.load(open('/home/younes/workMOON/prjMapping/CSAIL_Lim/src/ratslam_python/src/graphObjdb.obj','rb'))
-    
+
+
 objectsVertices= list(reader.nodes)  
 
-step=0
+indexOfVertex=0
 
 
-db=DbObjects(objectsVertices)
-G=ob.currentOobject((objectsVertices))
+db=ob.DbObjects(objectsVertices)
+currObj = ob.currentObject(db)
+
+
 def objDetect(data,pub_ot):
-    global step
-    #global file
-    global index_of_img
-    # for comparison
-    e_max=4
-    beta=e_max/2
+    global indexOfVertex
+    currentObj=objectsVertices[indexOfVertex]
+    currObj.on_object(currentObj)
+    currObj.compute_G1()
+    currObj.compute_G2()
 
-    currentVertex=currentVertex(indexOfVertex)
-
-    object.on_object(currentVertex)
-    object.compute_G1()
-    object.compute_G2()
-
-    object.OptimizationScore()
+    currObj.OptimizationScore()
 
 
-    O=G.currentOobject(objectsVertices[step])
+    '''
+
+    object.currentOobject(objectsVertices[step])
+
+    print(object.current_ob)
+
     index_of_img+=1
 
 
@@ -89,7 +90,9 @@ def objDetect(data,pub_ot):
     cv2.imshow('scene at time t',img)
     cv2.waitKey(1)
     cv2.destroyAllWindows()
-    step+=1
+    '''    
+
+    indexOfVertex+=1
 
 def listener():
     

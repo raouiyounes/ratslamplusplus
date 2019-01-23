@@ -6,7 +6,7 @@ from cmath import sqrt
 import itertools
 #pdb.set_trace()
 
-class Object:
+class Object:Matching
 	def __init__(self):
 		self.x_i=0
 		self.y_i=0
@@ -74,10 +74,10 @@ class OneMatching:
 						e_i1_j1=e_i1_j1[0]
 						
 						cv21=[i2.cv[0],i2.cv[1]]
-							cv22=[j2.cv[0],j2.cv[1]]
-							e_i2_j2=self.normalfx(cv21,cv22)
-							e_i2_j2=e_i2_j2[0]
-							Hj1.append(self.emax-math.sqrt((e_i1_j1[0]-e_i2_j2[0])**2+(e_i1_j1[1]-e_i2_j2[1])**2))
+						cv22=[j2.cv[0],j2.cv[1]]
+						e_i2_j2=self.normalfx(cv21,cv22)
+						e_i2_j2=e_i2_j2[0]
+						Hj1.append(self.emax-math.sqrt((e_i1_j1[0]-e_i2_j2[0])**2+(e_i1_j1[1]-e_i2_j2[1])**2))
 						Hj2.append(Hj1)
 			 		Hj3.append(Hj2)
 				Hr.append(Hj3)
@@ -85,11 +85,11 @@ class OneMatching:
 
 
 		self.H=[[[[0]*len(Hr[0][0][0])]*len(Hr[0][0])]*len(Hr[0])]*len(Hr)
-			for i in range(len(Hr)):
-			    for j in range(len(Hr[0])):
-			        for k in range(len(Hr[0][0])):
-			            for l in range(len(Hr[0][0][0])):
-			                self.H[i][j][k][l]=Hr[i][j][k][l]*Hl[i][j][k][l]
+		for i in range(len(Hr)):
+		    for j in range(len(Hr[0])):
+		        for k in range(len(Hr[0][0])):
+		            for l in range(len(Hr[0][0][0])):
+		                self.H[i][j][k][l]=Hr[i][j][k][l]*Hl[i][j][k][l]
 
 		return Hl,Hr
 

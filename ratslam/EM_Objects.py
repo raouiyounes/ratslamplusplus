@@ -19,7 +19,7 @@ class DbObjects:
     def __init__(self,objectsDb):
         self.constructGraph()
 
-     def constructGraph(self):
+    def constructGraph(self):
         self.topoMap= nx.Graph()
         for ob in self.objectsDb:
             vertex_i=Vertex(ob.cv,ob.label,ob.index_of_img,ob.listsurf)
@@ -29,8 +29,8 @@ class DbObjects:
             for vx_1 in self.topoMap:
                 if vx_0!=vx_1:
                     e=self.normal(vx_0.cv,vx_1.cv)    
-                        if e<self.e_max:
-                            self.topoMap.add_edge(vx_0,vx_1)
+                    if e<self.e_max:
+                        self.topoMap.add_edge(vx_0,vx_1)
 
 
     def normal(self,cvi,cvj):
@@ -106,7 +106,7 @@ class currentOobject(Matching):
     def compute_G2(self):
         for ob in self.topoMap.nodes:
                 if ob not in  self.subgraphG1.nodes:
-                nbunch.append(ob)
+                    nbunch.append(ob)
         self.subgraphG2=nx.subgraph(self.topoMap,nbunch)
         
 
