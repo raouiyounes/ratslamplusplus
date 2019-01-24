@@ -6,7 +6,7 @@ from cmath import sqrt
 import itertools
 #pdb.set_trace()
 
-class Object:Matching
+class Object:
 	def __init__(self):
 		self.x_i=0
 		self.y_i=0
@@ -33,7 +33,7 @@ class Matching:
 
 class OneMatching:
 	score=[]
-	def __init__(G1,G2):
+	def __init__(self,G1,G2):
 		self.G1=G1
 		self.G2=G2
 		self.emax=2
@@ -46,13 +46,13 @@ class OneMatching:
 
 	def create_H(self):
 		Hl=[]
-		for i1 in G1:
+		for i1 in self.G1:
 			Hj3=[]
-			for i2 in G2:
+			for i2 in self.G2:
 				Hj2=[]
-				for j1 in G1:
+				for j1 in self.G1:
 					Hj1=[]
-					for j2 in G2:
+					for j2 in self.G2:
 						if (i1.lv==i2.lv  and  j1.lv==j2.lv):
 							Hj1.append(1)
 						else:	
@@ -61,13 +61,13 @@ class OneMatching:
 				Hj3.append(Hj2)
 			Hl.append(Hj3)
 		Hr=[]
-		for i1 in G1:
+		for i1 in self.G1:
 			Hj3=[]
-			for i2 in G2:
+			for i2 in self.G2:
 				Hj2=[]
-				for j1 in G1:
+				for j1 in self.G1:
 					Hj1=[]
-					for j2 in G2:
+					for j2 in self.G2:
 						cv11=[i1.cv[0],i1.cv[1]]
 						cv12=[j1.cv[0],j1.cv[1]]
 						e_i1_j1=self.normalfx(cv11,cv12)
