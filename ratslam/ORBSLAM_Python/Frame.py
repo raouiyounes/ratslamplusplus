@@ -34,7 +34,7 @@ class Frame(object):
         '''
         Constructor
         '''
-        
+        s
         orb = cv.ORB_create()
         # find the keypoints with ORB
         mvKeys = orb.detect(img,None)
