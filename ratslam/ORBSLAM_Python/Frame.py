@@ -15,7 +15,7 @@ class Frame(object):
     classdocs
     '''
 
-
+    nNextId=0
     def __init__(self,im_,timeStamp,extractor,voc,K,distCoef):
         self.mOw=np.zeros(4)
         self.mRcw=np.zeros((3,3))
@@ -26,16 +26,18 @@ class Frame(object):
         self.nNextid
         self.dictionarySize = 5
         self.BOW = cv2.BOWKMeansTrainer(self.dictionarySize)
-        self.fx
-        self.fy
-        self.cx
-        self.cy
+        self.mbInitialComputations=True
         self.mDistCoef=[]
-        '''
-        Constructor
-        '''
-        s
-        orb = cv.ORB_create()
+        self.mvScaleFactors=mvScaleFactors
+
+        orb = cv2.ORB_create(nfeatures=int(.25 * (bd.shape[0] * bd.shape[1])),
+                             edgeThreshold=patch_size,
+                             scaleFactor=1.2,
+                             nlevels=8,
+                             patchSize=patch_size,
+                             WTA_K=4,
+                             scoreType=cv2.ORB_FAST_SCORE)
+
         # find the keypoints with ORB
         mvKeys = orb.detect(img,None)
         # compute the descriptors with ORB
@@ -44,12 +46,34 @@ class Frame(object):
         N=len(self.mvKeys)
         if not self.mvKeys:
             return 
-        mvpMapPoints=[]
+        self.mvpMapPoints=[]
         for i in range(N):
             mvpMapPoints.append(MapPoint(null))
-        
-        
-    # computation of bag of words
+        self.UndistortKeyPoints();
+
+        if self.mbInitialComputations:
+            self.ComputeImageBounds()
+
+            self.fx=K[0,0]
+            self.fy=K[1,1]
+            self.cx=K[0,2]
+            self.cy=K[1,2]
+            self.mbInitialComputations = False;
+
+        # This is done for the first created Frame
+        mnId = Frame.nNextId+1;
+        mfScaleFactor=orb.getScaleFactor()
+        mnScaleLevels=orb.getNLevels()
+
+        mvScaleFactors=np.zeros(mnScaleLevels)
+        mvLevelSigma2=np.zeros(mnScaleLevels)
+        mvScaleFactors[0] = 1.0
+        mvLevelSigma2[0] = 1.0
+        for i in range(1,mnScaleLevels):
+            mvScaleFactors[i] = mvScaleFactors[i - 1] * mfScaleFactor;
+            mvLevelSigma2[i] = mvScaleFactors[i] * mvScaleFactors[i];
+
+        # computation of bag of words
     def ComputeBoW(self):
         self.BOW.add(self.mDescriptors)
         
